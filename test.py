@@ -11,6 +11,7 @@ except ImportError:
 
 import pandas as pd
 import sys, os
+from PFE_Data_Cleaner.Data_Cleaner.data_Cleaner_Module import data_Cleaner as DC
 if getattr(sys, 'frozen', False):
     # If the application is run as a bundle, the pyInstaller bootloader
     # extends the sys module by a flag frozen=True and sets the app
@@ -38,14 +39,19 @@ class MyWindow:
         self.button = tk.Button(self.parent, text='chargement', command=self.load)
         self.button.pack()
 
-        self.button = tk.Button(self.parent, text='Aperçu', command=self.display)
+        self.button = tk.Button(self.parent, text='Clean & Save', command=self.cleanSave)
         self.button.pack()
 
-        self.button = tk.Button(self.parent, text='save', command=self.save_file)
+        self.button = tk.Button(self.parent, text='Aperçu', command=self.display)
         self.button.pack()
 
         self.button = tk.Button(self.parent, text='clear', command=self.clear)
         self.button.pack()
+
+
+    def cleanSave(self):
+        DC.saveWB(DC.changeDate(DC.purify(DC.openWB(self.filename), 0), 0, '%Y%m%d'), '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
+
 
     def load(self):
 
