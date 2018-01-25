@@ -61,6 +61,6 @@ interface = Interface(fenetre)
 interface.mainloop()
 interface.destroy()
 
-bouton_quitter = Button(Frame1, text="Quitter",cursor="man",relief=RAISED, command=fenetre.quit)
+bouton_quitter = Button(Frame1, text="QuitterH2H2",cursor="man",relief=RAISED, command=fenetre.quit)
 bouton_quitter.pack(side=LEFT, padx=10, pady=10)
 fenetre.mainloop()
