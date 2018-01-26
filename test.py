@@ -29,24 +29,37 @@ class MyWindow:
     def __init__(self, parent):
 
         self.parent = parent
-
+        self.parent.title("MondoClean")
         self.filename = None
         self.df = None
+        self.frame = tk.Frame(self.parent, bg='#fcc9ad', width=1200, height=600)
+        self.frame.pack()
+        self.frame.grid()
+        self.frame.pack_propagate(0)
 
-        self.text = tk.Text(self.parent)
+        self.cadre1 = tk.PanedWindow(self.frame, bg='#ed8686', width=400, height=600)
+        self.cadre1.pack(side =tk.LEFT)
+        self.cadre1.pack_propagate(0)
+        self.cadre2 = tk.PanedWindow(self.frame, bg='white', width=800, height=500)
+        self.cadre2.pack(side =tk.LEFT,padx =10)
+        self.cadre2.pack_propagate(0)
+
+        self.text = tk.Text(self.cadre2,bg='white', width=400, height=300)
         self.text.pack()
 
-        self.button = tk.Button(self.parent, text='chargement', command=self.load)
-        self.button.pack()
+        self.button = tk.Button(self.cadre1, text='Chargement', command=self.load)
+        self.button.place(x=10, y=550, width=100, height=25)
 
-        self.button = tk.Button(self.parent, text='Clean & Save', command=self.cleanSave)
-        self.button.pack()
+        self.button = tk.Button(self.cadre1, text='Aperçu', command=self.display)
+        self.button.place(x=120, y=550, width=70, height=25)
 
-        self.button = tk.Button(self.parent, text='Aperçu', command=self.display)
-        self.button.pack()
+        self.button = tk.Button(self.cadre1,text='Effacer', command=self.clear)
+        self.button.place(x=200, y=550, width=80, height=25)
 
-        self.button = tk.Button(self.parent, text='clear', command=self.clear)
-        self.button.pack()
+        self.button = tk.Button(self.cadre1, text='Clean & Save', command=self.cleanSave)
+        self.button.place(x=290, y=550, width=100, height=25)
+
+
 
 
     def cleanSave(self):
@@ -85,7 +98,7 @@ class MyWindow:
              print("User saved the filename with extension:", filename.split(".")[-1])
 
 
-             button = tk.Button(root, text='Save File', command=save_file)
+             button = tk.Button(self.parent, text='Save File', command=save_file)
              button.pack()
 
     def clear(self):
@@ -95,7 +108,7 @@ class MyWindow:
 # --- main ---
 
 if __name__ == '__main__':
-    root = tk.Tk()
-    root.eval('lappend auto_path {' +TK_DND_PATH+ '}')
-    top = MyWindow(root)
-    root.mainloop()
+    parent = tk.Tk()
+    parent.eval('lappend auto_path {' +TK_DND_PATH+ '}')
+    top = MyWindow(parent)
+    parent.mainloop()
