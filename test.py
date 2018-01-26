@@ -29,7 +29,7 @@ class MyWindow:
     def __init__(self, parent):
 
         self.parent = parent
-        self.parent.title("MondoClean")
+        self.parent.title("MondoCleanCOUCOU")
         self.filename = None
         self.df = None
         self.frame = tk.Frame(self.parent, bg='#fcc9ad', width=1200, height=600)
