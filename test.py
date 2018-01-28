@@ -11,7 +11,7 @@ except ImportError:
 
 import pandas as pd
 import sys, os
-from PFE_Data_Cleaner.Data_Cleaner.data_Cleaner_Module import data_Cleaner as DC
+from PFE_MondoClean.data_Cleaner_Module import data_Cleaner as DC
 if getattr(sys, 'frozen', False):
     # If the application is run as a bundle, the pyInstaller bootloader
     # extends the sys module by a flag frozen=True and sets the app
@@ -29,7 +29,7 @@ class MyWindow:
     def __init__(self, parent):
 
         self.parent = parent
-        self.parent.title("MondoCleanCOUCOU")
+        self.parent.title("MondoClean")
         self.filename = None
         self.df = None
         self.frame = tk.Frame(self.parent, bg='#fcc9ad', width=1200, height=600)
@@ -63,7 +63,12 @@ class MyWindow:
 
 
     def cleanSave(self):
-        DC.saveWB(DC.changeDate(DC.purify(DC.openWB(self.filename), 0), 0, '%Y%m%d'), '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
+        cleaner = DC.Cleaner(self.filename, 0, 1, '%Y%m%d', '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
+        cleaner.openWB()
+        cleaner.purify()
+        cleaner.changeDate()
+        cleaner.anonymize()
+        cleaner.saveWB()
 
 
     def load(self):
