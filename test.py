@@ -35,35 +35,41 @@ class MyWindow:
         self.filename = None
         self.df = None
         self.cleaner = None
-        self.frame = tk.Frame(self.parent, bg='#C4CDD5', width=1200, height=600)
+        self.frame = tk.Frame(self.parent, bg='#DFEBF6', width=1200, height=600)
         self.frame.pack()
         self.frame.grid()
         self.frame.pack_propagate(0)
 
-        self.cadre1 = tk.PanedWindow(self.frame, bg='#BEC8D0', width=400, height=600)
+        self.cadre1 = tk.PanedWindow(self.frame, bg='#E5EEF7', width=350, height=600)
         self.cadre1.pack(side =tk.LEFT)
         self.cadre1.pack_propagate(0)
-        self.cadre2 = tk.PanedWindow(self.frame, bg='#C4CDD5', width=800, height=500)
+        self.cadre2 = tk.PanedWindow(self.frame, bg='#D5E4F3', width=900, height=600)
         self.cadre2.pack(side =tk.LEFT,padx =10)
         self.cadre2.pack_propagate(0)
 
-        self.text = tk.Text(self.cadre2,bg='white', width=400, height=300)
-        self.text.pack()
+        self.text = tk.Text(self.cadre2,bg='white')
+        self.text.place(x=50,y=100, width =700, height=400)
+
+        self.label =tk.Label(self.cadre1,text='Texte',bg='#E5EEF7')
+        self.label.place(x=50, y=110)
+
+        self.entry = tk.Entry(self.cadre1, text='',)
+        self.entry.place(x=50, y=130, width=100, height=25)
 
         self.button = tk.Button(self.cadre1, text='Chargement', command=self.load)
         self.button.place(x=10, y=550, width=100, height=25)
 
-        self.button = tk.Button(self.cadre1, text='Aperçu', command=self.display)
-        self.button.place(x=120, y=550, width=70, height=25)
+        self.button = tk.Button(self.cadre2, text='Aperçu', command=self.display)
+        self.button.place(x=270,y=550,width =100, height =25)
 
-        self.button = tk.Button(self.cadre1,text='Effacer', command=self.clear)
-        self.button.place(x=200, y=550, width=80, height=25)
+        self.button = tk.Button(self.cadre2,text='Effacer', command=self.clear)
+        self.button.place(x=470, y=550, width=80, height=25)
 
         self.button = tk.Button(self.cadre1, text='Clean ', command=self.clean)
-        self.button.place(x=290, y=550, width=100, height=25)
+        self.button.place(x=120, y=550, width=100, height=25)
 
         self.button = tk.Button(self.cadre1, text='Save', command=self.save)
-        self.button.place(x=100, y=100, width=100, height=25)
+        self.button.place(x=230, y=550, width=100, height=25)
 
     def save(self):
         self.cleaner.saveWB()
@@ -89,7 +95,7 @@ class MyWindow:
             self.filename = name
 
         self.cleaner = DC.Cleaner(self.filename, 0, 1, '%Y%m%d', '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
-        self.cleaner.openWB()        
+        self.cleaner.openWB()
             # display directly
             #self.text.insert('end', str(self.df.head()) + '\n')
 
