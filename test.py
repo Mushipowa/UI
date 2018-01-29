@@ -69,11 +69,9 @@ class MyWindow:
         self.cleaner.saveWB()
 
     def clean(self):
-        cleaner = DC.Cleaner(self.filename, 0, 1, '%Y%m%d', '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
-        cleaner.openWB()
-        cleaner.purify()
-        cleaner.changeDate()
-        cleaner.anonymize()
+        self.cleaner.purify()
+        self.cleaner.changeDate()
+        self.cleaner.anonymize()
 
 
 
@@ -91,6 +89,7 @@ class MyWindow:
             self.filename = name
 
         self.cleaner = DC.Cleaner(self.filename, 0, 1, '%Y%m%d', '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
+        self.cleaner.openWB()        
             # display directly
             #self.text.insert('end', str(self.df.head()) + '\n')
 
