@@ -48,13 +48,91 @@ class MyWindow:
         self.cadre2.pack_propagate(0)
 
         self.text = tk.Text(self.cadre2,bg='white')
-        self.text.place(x=50,y=100, width =700, height=400)
+        self.text.place(x=40,y=100, width =700, height=400)
 
-        self.label =tk.Label(self.cadre1,text='Texte',bg='#E5EEF7')
-        self.label.place(x=50, y=110)
+        self.celluleVide =tk.Label(self.cadre1,text='Cellules Vides',bg='#E5EEF7')
+        self.celluleVide.place(x=40, y=20)
 
-        self.entry = tk.Entry(self.cadre1, text='',)
-        self.entry.place(x=50, y=130, width=100, height=25)
+        self.checkButtonCellule= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonCellule.place(x=15,y=20)
+
+        self.formatNombre =tk.Label(self.cadre1,text='Format Nombre',bg='#E5EEF7')
+        self.formatNombre.place(x=220, y=20)
+
+        self.checkButtonNombre= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonNombre.place(x=200,y=20)
+
+        self.formatEntree =tk.Label(self.cadre1,text='Format Entrée ',bg='#E5EEF7')
+        self.formatEntree.place(x=220, y=80)
+
+        self.entryDate = tk.Entry(self.cadre1)
+        self.entryDate.place(x=220, y=100, width=100, height=25)
+
+        self.formatDate =tk.Label(self.cadre1,text='Format Date',bg='#E5EEF7')
+        self.formatDate.place(x=40, y=100)
+
+        self.checkButtonDate= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonDate.place(x=15,y=100)
+
+        self.anonymisation =tk.Label(self.cadre1,text='Anonymisation \n Données',bg='#E5EEF7')
+        self.anonymisation.place(x=40, y=165)
+
+        self.checkButtonAnonymisation= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonAnonymisation.place(x=15,y=165)
+
+        self.entryAnonymisation = tk.Entry(self.cadre1)
+        self.entryAnonymisation.place(x=220, y=170, width=100, height=25)
+
+        self.colonneAnonymisation =tk.Label(self.cadre1,text='Colonne',bg='#E5EEF7')
+        self.colonneAnonymisation.place(x=240, y=145)
+
+        self.identificationDoublon =tk.Label(self.cadre1,text='Identification Doublon',bg='#E5EEF7')
+        self.identificationDoublon.place(x=40, y=240)
+
+        self.entryDoublon = tk.Entry(self.cadre1)
+        self.entryDoublon.place(x=220, y=240, width=100, height=25)
+
+        self.checkButtonDoublon= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonDoublon.place(x=15,y=240)
+
+        self.colonneDoublon =tk.Label(self.cadre1,text='Colonne',bg='#E5EEF7')
+        self.colonneDoublon.place(x=240, y=215)
+
+        self.compilationFichier =tk.Label(self.cadre1,text='Compilation Fichier',bg='#E5EEF7')
+        self.compilationFichier.place(x=40, y=300)
+
+        self.checkButtonCompilationFichier= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonCompilationFichier.place(x=15,y=300)
+
+        self.entryFichier1 = tk.Entry(self.cadre1)
+        self.entryFichier1.place(x=40, y=350, width=100, height=25)
+
+        self.entryFichier2 = tk.Entry(self.cadre1)
+        self.entryFichier2.place(x=220, y=350, width=100, height=25)
+
+        self.fichier1 =tk.Label(self.cadre1,text='Fichier 1',bg='#E5EEF7')
+        self.fichier1.place(x=40, y=325)
+
+        self.fichier2 =tk.Label(self.cadre1,text='Fichier 2',bg='#E5EEF7')
+        self.fichier2.place(x=240, y=325)
+
+        self.jointureFichier =tk.Label(self.cadre1,text='Jointure Fichier',bg='#E5EEF7')
+        self.jointureFichier.place(x=40, y=400)
+
+        self.checkButtonJointureFichier= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonJointureFichier.place(x=15,y=400)
+
+        self.entryJointureFichier2 = tk.Entry(self.cadre1)
+        self.entryJointureFichier2.place(x=220, y=450, width=100, height=25)
+
+        self.jointureFichier1 =tk.Label(self.cadre1,text='Fichier 1',bg='#E5EEF7')
+        self.jointureFichier1.place(x=40, y=425)
+
+        self.jointureFichier2 =tk.Label(self.cadre1,text='Fichier 2',bg='#E5EEF7')
+        self.jointureFichier2.place(x=240, y=425)
+
+        self.entryJointureFichier1 = tk.Entry(self.cadre1)
+        self.entryJointureFichier1.place(x=40, y=450, width=100, height=25)
 
         self.button = tk.Button(self.cadre1, text='Chargement', command=self.load)
         self.button.place(x=10, y=550, width=100, height=25)
