@@ -35,15 +35,28 @@ class MyWindow:
         self.filename = None
         self.df = None
         self.cleaner = None
-        self.frame = tk.Frame(self.parent, bg='#DFEBF6', width=1200, height=600)
+        self.dateFormat= None
+        self.frame = tk.Frame(self.parent, bg='#E5EEF7', width=1200, height=600)
         self.frame.pack()
         self.frame.grid()
         self.frame.pack_propagate(0)
 
+        self.menubar=tk.Menu(parent)
+        self.parent.config(menu=self.menubar)
+        self.menufichier=tk.Menu(self.menubar,tearoff=0)
+        self.menubar.add_cascade(label="Fichier",menu=self.menufichier)
+        self.menufichier.add_command(label="Ouvrir",command=self.load)
+        self.menufichier.add_separator()
+        self.menufichier.add_command(label="Enregistrer",command=self.save)
+        self.menufichier.add_command(label="Enregistrer Sous",command=self.saveas)
+        self.menufichier.add_separator()
+        self.menufichier.add_command(label="Quitter",command=self.parent.destroy)
+
+
         self.cadre1 = tk.PanedWindow(self.frame, bg='#E5EEF7', width=350, height=600)
         self.cadre1.pack(side =tk.LEFT)
         self.cadre1.pack_propagate(0)
-        self.cadre2 = tk.PanedWindow(self.frame, bg='#D5E4F3', width=900, height=600)
+        self.cadre2 = tk.PanedWindow(self.frame, bg='#CCD6EB', width=900, height=600)
         self.cadre2.pack(side =tk.LEFT,padx =10)
         self.cadre2.pack_propagate(0)
 
@@ -65,38 +78,39 @@ class MyWindow:
         self.formatEntree =tk.Label(self.cadre1,text='Format Entrée ',bg='#E5EEF7')
         self.formatEntree.place(x=220, y=80)
 
-        self.entryDate = tk.Entry(self.cadre1)
-        self.entryDate.place(x=220, y=100, width=100, height=25)
+        self.listDate = tk.Listbox(self.cadre1)
+        self.listDate.place(x=220, y=100, width=100, height=50)
+        self.listDate.insert(tk.END,"Y/M/D")
+        self.listDate.insert(tk.END,"Y/D/M")
+        self.listDate.insert(tk.END,"M/D/Y")
+        self.listDate.insert(tk.END,"M/Y/D")
+        self.listDate.insert(tk.END,"D/M/Y")
+        self.listDate.insert(tk.END,"D/Y/M")
 
         self.formatDate =tk.Label(self.cadre1,text='Format Date',bg='#E5EEF7')
         self.formatDate.place(x=40, y=100)
 
-        self.checkButtonDate= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
+        self.checkButtonDate= tk.Checkbutton(self.cadre1,bg='#E5EEF7')
         self.checkButtonDate.place(x=15,y=100)
 
         self.anonymisation =tk.Label(self.cadre1,text='Anonymisation \n Données',bg='#E5EEF7')
-        self.anonymisation.place(x=40, y=165)
+        self.anonymisation.place(x=40, y=175)
 
         self.checkButtonAnonymisation= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
-        self.checkButtonAnonymisation.place(x=15,y=165)
+        self.checkButtonAnonymisation.place(x=15,y=175)
 
         self.entryAnonymisation = tk.Entry(self.cadre1)
-        self.entryAnonymisation.place(x=220, y=170, width=100, height=25)
+        self.entryAnonymisation.place(x=220, y=180, width=100, height=25)
 
         self.colonneAnonymisation =tk.Label(self.cadre1,text='Colonne',bg='#E5EEF7')
-        self.colonneAnonymisation.place(x=240, y=145)
+        self.colonneAnonymisation.place(x=240, y=155)
 
         self.identificationDoublon =tk.Label(self.cadre1,text='Identification Doublon',bg='#E5EEF7')
         self.identificationDoublon.place(x=40, y=240)
 
-        self.entryDoublon = tk.Entry(self.cadre1)
-        self.entryDoublon.place(x=220, y=240, width=100, height=25)
-
         self.checkButtonDoublon= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
         self.checkButtonDoublon.place(x=15,y=240)
 
-        self.colonneDoublon =tk.Label(self.cadre1,text='Colonne',bg='#E5EEF7')
-        self.colonneDoublon.place(x=240, y=215)
 
         self.compilationFichier =tk.Label(self.cadre1,text='Compilation Fichier',bg='#E5EEF7')
         self.compilationFichier.place(x=40, y=300)
@@ -104,17 +118,14 @@ class MyWindow:
         self.checkButtonCompilationFichier= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
         self.checkButtonCompilationFichier.place(x=15,y=300)
 
-        self.entryFichier1 = tk.Entry(self.cadre1)
-        self.entryFichier1.place(x=40, y=350, width=100, height=25)
+        self.button = tk.Button(self.cadre1, text='Chargement', command=self.load)
+        self.button.place(x=40, y=350, width=100, height=25)
 
-        self.entryFichier2 = tk.Entry(self.cadre1)
-        self.entryFichier2.place(x=220, y=350, width=100, height=25)
+        self.liste = tk.Listbox(self.cadre1)
+        self.liste.place(x=220, y=350, width=100, height=50)
 
-        self.fichier1 =tk.Label(self.cadre1,text='Fichier 1',bg='#E5EEF7')
-        self.fichier1.place(x=40, y=325)
-
-        self.fichier2 =tk.Label(self.cadre1,text='Fichier 2',bg='#E5EEF7')
-        self.fichier2.place(x=240, y=325)
+        self.fichiers =tk.Label(self.cadre1,text='Fichiers',bg='#E5EEF7')
+        self.fichiers.place(x=240, y=320)
 
         self.jointureFichier =tk.Label(self.cadre1,text='Jointure Fichier',bg='#E5EEF7')
         self.jointureFichier.place(x=40, y=400)
@@ -149,10 +160,30 @@ class MyWindow:
         self.button = tk.Button(self.cadre1, text='Save', command=self.save)
         self.button.place(x=230, y=550, width=100, height=25)
 
+    def getParam(self):
+
+        if self.listDate.curselection()[0]==0:
+            self.dateFormat='%Y%m%d'
+        if self.listDate.curselection()[0]==1:
+            self.dateFormat='%Y%d%m'
+        if self.listDate.curselection()[0]==2:
+            self.dateFormat='%m%d%Y'
+        if self.listDate.curselection()[0]==3:
+            self.dateFormat='%m%Y%d'
+        if self.listDate.curselection()[0]==4:
+            self.dateFormat='%d%m%Y'
+        if self.listDate.curselection()[0]==5:
+            self.dateFormat='%d%Y%m'
+
     def save(self):
         self.cleaner.saveWB()
 
     def clean(self):
+
+
+        self.getParam()
+        self.cleaner = DC.Cleaner(self.filename, 0, 1, self.dateFormat, '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
+        self.cleaner.openWB()
         self.cleaner.purify()
         self.cleaner.changeDate()
         self.cleaner.anonymize()
@@ -172,8 +203,7 @@ class MyWindow:
 
             self.filename = name
 
-        self.cleaner = DC.Cleaner(self.filename, 0, 1, '%Y%m%d', '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
-        self.cleaner.openWB()
+
             # display directly
             #self.text.insert('end', str(self.df.head()) + '\n')
 
@@ -181,21 +211,13 @@ class MyWindow:
         # ask for file if not loaded yet
         if self.df is None:
             self.load()
+        else:
+            self.text.delete('1.0',tk.END)
+            self.text.insert('end', str(self.cleaner.getActiveSheet()) + '\n')
 
-        # display if loaded
-        if self.df is not None:
-            self.text.insert('end', self.filename + '\n')
-            self.text.insert('end', str(self.df.head()) + '\n')
-
-    def save_file():
-
-        filename = askopenfilename(filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
-        if filename:
-             print("User saved the filename with extension:", filename.split(".")[-1])
-
-
-             button = tk.Button(self.parent, text='Save File', command=save_file)
-             button.pack()
+    def saveas(self):
+        newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
+        print(newName.name)
 
     def clear(self):
         self.text.delete('1.0',tk.END)
