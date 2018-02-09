@@ -9,6 +9,8 @@ except ImportError:
     from tkinter import ttk
     from tkinter.filedialog import askopenfilename
 
+import PIL
+from PIL import ImageTk, Image
 import pandas as pd
 import sys, os
 from PFE_MondoClean.MondoClean.data_Cleaner_Module import data_Cleaner as DC
@@ -28,21 +30,24 @@ class MyWindow:
 
     def __init__(self, parent):
 
+        #Initialisation
         self.parent = parent
         self.parent.title("MondoClean")
+        self.parent.resizable(width=False,height=False)
         #self.parent.rowconfigure(0, weight=1)
         #self.parent.columnconfigure(0, weight=1)
         self.filename = None
         self.df = None
         self.cleaner = None
         self.dateFormat= None
-        self.frame = tk.Frame(self.parent, bg='#E5EEF7', width=1200, height=600)
-        self.frame.pack()
+        self.frame = tk.Frame(self.parent, bg='#989292', width=1200, height=700)
         self.frame.grid()
-        self.frame.pack_propagate(0)
+        self.frame.grid_propagate(False)
 
+        #Menu
         self.menubar=tk.Menu(parent)
         self.parent.config(menu=self.menubar)
+
         self.menufichier=tk.Menu(self.menubar,tearoff=0)
         self.menubar.add_cascade(label="Fichier",menu=self.menufichier)
         self.menufichier.add_command(label="Ouvrir",command=self.load)
@@ -52,34 +57,76 @@ class MyWindow:
         self.menufichier.add_separator()
         self.menufichier.add_command(label="Quitter",command=self.parent.destroy)
 
-
-        self.cadre1 = tk.PanedWindow(self.frame, bg='#E5EEF7', width=350, height=600)
+        #Deux grands Panels
+        self.cadre1 = tk.PanedWindow(self.frame, bg='#898283', width=500, height=700)
         self.cadre1.pack(side =tk.LEFT)
         self.cadre1.pack_propagate(0)
-        self.cadre2 = tk.PanedWindow(self.frame, bg='#CCD6EB', width=900, height=600)
+        self.cadre2 = tk.PanedWindow(self.frame, bg='#A7A1A2', width=800, height=700)
         self.cadre2.pack(side =tk.LEFT,padx =10)
         self.cadre2.pack_propagate(0)
 
+        #Petits panels du Panel cadre1
+        self.cadreFichier =tk.PanedWindow(self.cadre1,width= 475, height= 190, bd= 2, relief = 'sunken')
+        self.cadreFichier.place(x=10,y=50)
+        self.cadreFichier.pack_propagate(0)
+
+        self.cadreDate =tk.PanedWindow(self.cadre1,width= 475, height= 160, bd= 2, relief = 'sunken')
+        self.cadreDate.place(x=10,y=250)
+        self.cadreDate.pack_propagate(0)
+
+        self.cadreAnonymisation =tk.PanedWindow(self.cadre1,width= 475, height= 130, bd= 2, relief = 'sunken')
+        self.cadreAnonymisation.place(x=10,y=420)
+        self.cadreAnonymisation.pack_propagate(0)
+
+        self.cadreCategorisation =tk.PanedWindow(self.cadre1,width= 475, height= 130, bd= 2, relief = 'sunken')
+        self.cadreCategorisation.place(x=10,y=560)
+        self.cadreCategorisation.pack_propagate(0)
+
+        #Titre panel paramètres
+        self.labelTitreCadre1 = tk.Label(self.cadre1,text='Paramètres',justify='center',width=55, bg='#5E5455',fg='white')
+        self.labelTitreCadre1.place(x=0, y=0)
+
+        #Image Doshas
+        self.im=Image.open("/Users/charles/Documents/Python/PFE/PFE_UI/UI/images/Logo_Doshas_V7.JPG")
+        self.photo=ImageTk.PhotoImage(self.im)
+        self.labelDoshas=tk.Label(self.cadre2,image=self.photo, bg='#5A6932')
+        self.labelDoshas.place(x=300, y=20, width=200 ,height=69)
+
+        #Image run (Clean)
+        self.play=Image.open("/Users/charles/Documents/Python/PFE/PFE_UI/UI/images/play_V2.JPG")
+        self.photoPlay=ImageTk.PhotoImage(self.play)
+        self.button = tk.Button(self.cadre2, bg='#5A6932',image=self.photoPlay,command=self.clean)
+        self.button.place(x=400, y=620, width=64, height=64)
+
+
+        #Zone d'affichage
         self.text = tk.Text(self.cadre2,bg='white')
-        self.text.place(x=40,y=100, width =700, height=400)
+        self.text.place(x=50,y=100, width =700, height=500)
 
-        self.celluleVide =tk.Label(self.cadre1,text='Cellules Vides',bg='#E5EEF7')
-        self.celluleVide.place(x=40, y=20)
+        #cadreDate : Date,nombre,cellules vides
+        self.celluleVide =tk.Label(self.cadreDate,text='Cellules Vides')
+        self.celluleVide.place(x=50, y=30)
 
-        self.checkButtonCellule= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
-        self.checkButtonCellule.place(x=15,y=20)
+        self.checkButtonCellule= tk.Checkbutton(self.cadreDate)
+        self.checkButtonCellule.place(x=30,y=30)
 
-        self.formatNombre =tk.Label(self.cadre1,text='Format Nombre',bg='#E5EEF7')
-        self.formatNombre.place(x=220, y=20)
+        self.entryCaracteresIndesirables= tk.Entry(self.cadreDate)
+        self.entryCaracteresIndesirables.place(x=260, y=30,  width=100, height=25)
 
-        self.checkButtonNombre= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
-        self.checkButtonNombre.place(x=200,y=20)
+        self.caracteresIndesirables= tk.Label(self.cadreDate, text='Caractères Indesirables')
+        self.caracteresIndesirables.place(x=230, y=8)
 
-        self.formatEntree =tk.Label(self.cadre1,text='Format Entrée ',bg='#E5EEF7')
-        self.formatEntree.place(x=220, y=80)
+        self.formatNombre =tk.Label(self.cadreDate,text='Format Nombre')
+        self.formatNombre.place(x=50, y=120)
 
-        self.listDate = tk.Listbox(self.cadre1)
-        self.listDate.place(x=220, y=100, width=100, height=50)
+        self.checkButtonNombre= tk.Checkbutton(self.cadreDate )
+        self.checkButtonNombre.place(x=30,y=120)
+
+        self.formatEntree =tk.Label(self.cadreDate,text='Format Entrée ')
+        self.formatEntree.place(x=260, y=60)
+
+        self.listDate = tk.Listbox(self.cadreDate)
+        self.listDate.place(x=260, y=80, width=100, height=30)
         self.listDate.insert(tk.END,"Y/M/D")
         self.listDate.insert(tk.END,"Y/D/M")
         self.listDate.insert(tk.END,"M/D/Y")
@@ -87,79 +134,110 @@ class MyWindow:
         self.listDate.insert(tk.END,"D/M/Y")
         self.listDate.insert(tk.END,"D/Y/M")
 
-        self.formatDate =tk.Label(self.cadre1,text='Format Date',bg='#E5EEF7')
-        self.formatDate.place(x=40, y=100)
+        self.formatDate =tk.Label(self.cadreDate,text='Format Date')
+        self.formatDate.place(x=50, y=80)
 
-        self.checkButtonDate= tk.Checkbutton(self.cadre1,bg='#E5EEF7')
-        self.checkButtonDate.place(x=15,y=100)
+        self.checkButtonDate= tk.Checkbutton(self.cadreDate)
+        self.checkButtonDate.place(x=30,y=80)
 
-        self.anonymisation =tk.Label(self.cadre1,text='Anonymisation \n Données',bg='#E5EEF7')
-        self.anonymisation.place(x=40, y=175)
+        #cadreAnonymisation : Anonymisation et Doublon
+        self.anonymisation =tk.Label(self.cadreAnonymisation,text='Anonymisation Données')
+        self.anonymisation.place(x=50, y=30)
 
-        self.checkButtonAnonymisation= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
-        self.checkButtonAnonymisation.place(x=15,y=175)
+        self.checkButtonAnonymisation= tk.Checkbutton(self.cadreAnonymisation )
+        self.checkButtonAnonymisation.place(x=30,y=30)
 
-        self.entryAnonymisation = tk.Entry(self.cadre1)
-        self.entryAnonymisation.place(x=220, y=180, width=100, height=25)
+        self.entryAnonymisation = tk.Entry(self.cadreAnonymisation)
+        self.entryAnonymisation.place(x=260, y=30, width=100, height=25)
 
-        self.colonneAnonymisation =tk.Label(self.cadre1,text='Colonne',bg='#E5EEF7')
-        self.colonneAnonymisation.place(x=240, y=155)
+        self.colonneAnonymisation =tk.Label(self.cadreAnonymisation,text='Colonne')
+        self.colonneAnonymisation.place(x=280, y=8)
 
-        self.identificationDoublon =tk.Label(self.cadre1,text='Identification Doublon',bg='#E5EEF7')
-        self.identificationDoublon.place(x=40, y=240)
+        self.identificationDoublon =tk.Label(self.cadreAnonymisation,text='Identification Doublon')
+        self.identificationDoublon.place(x=50, y=80)
 
-        self.checkButtonDoublon= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
-        self.checkButtonDoublon.place(x=15,y=240)
+        self.checkButtonDoublon= tk.Checkbutton(self.cadreAnonymisation)
+        self.checkButtonDoublon.place(x=30,y=80)
+
+        self.entryDoublon= tk.Entry(self.cadreAnonymisation)
+        self.entryDoublon.place(x=260, y=80, width=100, height=25)
+
+        self.colonneDoublon =tk.Label(self.cadreAnonymisation,text='Colonne')
+        self.colonneDoublon.place(x=280, y=58)
 
 
-        self.compilationFichier =tk.Label(self.cadre1,text='Compilation Fichier',bg='#E5EEF7')
-        self.compilationFichier.place(x=40, y=300)
+        #cadreFichier : Compilation et Jointure
+        self.compilationFichier =tk.Label(self.cadreFichier,text='Compilation Fichier')
+        self.compilationFichier.place(x=50, y=20)
 
-        self.checkButtonCompilationFichier= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
-        self.checkButtonCompilationFichier.place(x=15,y=300)
+        self.checkButtonCompilationFichier= tk.Checkbutton(self.cadreFichier)
+        self.checkButtonCompilationFichier.place(x=30,y=20)
 
-        self.button = tk.Button(self.cadre1, text='Chargement', command=self.load)
-        self.button.place(x=40, y=350, width=100, height=25)
+        self.button = tk.Button(self.cadreFichier, text='Chargement',bd='4',relief='raised', command=self.load)
+        self.button.place(x=200, y=20, width=100, height=25)
 
-        self.liste = tk.Listbox(self.cadre1)
-        self.liste.place(x=220, y=350, width=100, height=50)
+        self.liste = tk.Listbox(self.cadreFichier)
+        self.liste.place(x=350, y=30, width=100, height=50)
 
-        self.fichiers =tk.Label(self.cadre1,text='Fichiers',bg='#E5EEF7')
-        self.fichiers.place(x=240, y=320)
+        self.fichiers =tk.Label(self.cadreFichier,text='Fichiers')
+        self.fichiers.place(x=370, y=5)
 
-        self.jointureFichier =tk.Label(self.cadre1,text='Jointure Fichier',bg='#E5EEF7')
-        self.jointureFichier.place(x=40, y=400)
+        self.jointureFichier =tk.Label(self.cadreFichier,text='Jointure Fichier')
+        self.jointureFichier.place(x=50, y=90)
 
-        self.checkButtonJointureFichier= tk.Checkbutton(self.cadre1,bg='#E5EEF7' )
-        self.checkButtonJointureFichier.place(x=15,y=400)
+        self.checkButtonJointureFichier= tk.Checkbutton(self.cadreFichier)
+        self.checkButtonJointureFichier.place(x=30,y=90)
 
-        self.entryJointureFichier2 = tk.Entry(self.cadre1)
-        self.entryJointureFichier2.place(x=220, y=450, width=100, height=25)
+        self.button = tk.Button(self.cadreFichier, text='Chargement',bd='4',relief='raised', command=self.load)
+        self.button.place(x=200, y=90, width=100, height=25)
 
-        self.jointureFichier1 =tk.Label(self.cadre1,text='Fichier 1',bg='#E5EEF7')
-        self.jointureFichier1.place(x=40, y=425)
+        self.jointureFichiersColonne=tk.Label(self.cadreFichier,text='Colonne')
+        self.jointureFichiersColonne.place(x=10, y=150)
 
-        self.jointureFichier2 =tk.Label(self.cadre1,text='Fichier 2',bg='#E5EEF7')
-        self.jointureFichier2.place(x=240, y=425)
+        self.jointureFichier1 =tk.Label(self.cadreFichier,text='Fichier 1')
+        self.jointureFichier1.place(x=110, y=130)
 
-        self.entryJointureFichier1 = tk.Entry(self.cadre1)
-        self.entryJointureFichier1.place(x=40, y=450, width=100, height=25)
+        self.entryJointureFichier1 = tk.Entry(self.cadreFichier)
+        self.entryJointureFichier1.place(x=90, y=150, width=100, height=25)
 
-        self.button = tk.Button(self.cadre1, text='Chargement', command=self.load)
-        self.button.place(x=10, y=550, width=100, height=25)
+        self.jointureFichier2 =tk.Label(self.cadreFichier,text='Fichier 2')
+        self.jointureFichier2.place(x=240, y=130)
 
-        self.button = tk.Button(self.cadre2, text='Aperçu', command=self.display)
-        self.button.place(x=270,y=550,width =100, height =25)
+        self.entryJointureFichier2 = tk.Entry(self.cadreFichier)
+        self.entryJointureFichier2.place(x=220, y=150, width=100, height=25)
 
-        self.button = tk.Button(self.cadre2,text='Effacer', command=self.clear)
-        self.button.place(x=470, y=550, width=80, height=25)
+        self.jointureFichier3 =tk.Label(self.cadreFichier,text='Colonne à ajouter')
+        self.jointureFichier3.place(x=340, y=130)
 
-        self.button = tk.Button(self.cadre1, text='Clean ', command=self.clean)
-        self.button.place(x=120, y=550, width=100, height=25)
+        self.entryJointureFichier3 = tk.Entry(self.cadreFichier)
+        self.entryJointureFichier3.place(x=350, y=150, width=100, height=25)
 
-        self.button = tk.Button(self.cadre1, text='Save', command=self.save)
-        self.button.place(x=230, y=550, width=100, height=25)
+        #cadreCategorisation : Categorisation
+        self.categorisation =tk.Label(self.cadreCategorisation,text='Catégorisation')
+        self.categorisation.place(x=50, y=20)
 
+        self.checkButtonCategorisation= tk.Checkbutton(self.cadreCategorisation)
+        self.checkButtonCategorisation.place(x=30,y=20)
+
+        self.entryColonneCategorisation = tk.Entry(self.cadreCategorisation)
+        self.entryColonneCategorisation.place(x=260, y=30, width=100, height=25)
+
+        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Colonne')
+        self.colonneCategorisation.place(x=280, y=8)
+
+        self.entryEntreeCategorisation = tk.Entry(self.cadreCategorisation)
+        self.entryEntreeCategorisation.place(x=50, y=80, width=100, height=25)
+
+        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Entrée')
+        self.colonneCategorisation.place(x=70, y=58)
+
+        self.entrySortieCategorisation = tk.Entry(self.cadreCategorisation)
+        self.entrySortieCategorisation.place(x=260, y=80, width=100, height=25)
+
+        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Sortie')
+        self.colonneCategorisation.place(x=280, y=58)
+
+    #Date Parametres
     def getParam(self):
 
         if self.listDate.curselection()[0]==0:
@@ -175,9 +253,11 @@ class MyWindow:
         if self.listDate.curselection()[0]==5:
             self.dateFormat='%d%Y%m'
 
+    #Sauvegarder avec menu
     def save(self):
         self.cleaner.saveWB()
 
+    #Nettoyer
     def clean(self):
 
 
@@ -189,7 +269,7 @@ class MyWindow:
         self.cleaner.anonymize()
 
 
-
+    #Charger un fichier
     def load(self):
 
         name = askopenfilename(filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
@@ -207,6 +287,7 @@ class MyWindow:
             # display directly
             #self.text.insert('end', str(self.df.head()) + '\n')
 
+    #Afficher sur la zone
     def display(self):
         # ask for file if not loaded yet
         if self.df is None:
@@ -215,10 +296,12 @@ class MyWindow:
             self.text.delete('1.0',tk.END)
             self.text.insert('end', str(self.cleaner.getActiveSheet()) + '\n')
 
+    #Sauvegarder un fichier sous
     def saveas(self):
         newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
         print(newName.name)
 
+    #Effacer l'affichage
     def clear(self):
         self.text.delete('1.0',tk.END)
 
