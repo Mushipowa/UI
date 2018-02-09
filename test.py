@@ -8,7 +8,6 @@ except ImportError:
     import tkinter as tk
     from tkinter import ttk
     from tkinter.filedialog import askopenfilename
-
 import PIL
 from PIL import ImageTk, Image
 import pandas as pd
@@ -20,11 +19,9 @@ if getattr(sys, 'frozen', False):
     # path into variable _MEIPASS'.
     application_path = sys._MEIPASS
 else:
-    application_path = os.path.dirname(os.path.abspath('_file_'))
+    application_path = os.path.dirname(os.path.abspath('file'))
 
 TK_DND_PATH = os.path.join(application_path,'tkdnd2.8')
-
-
 # --- classes ---
 class MyWindow:
 
@@ -40,6 +37,14 @@ class MyWindow:
         self.df = None
         self.cleaner = None
         self.dateFormat= None
+        self.colIndexDoublon= None
+        self.colIndexAnonymisation= None
+        self.banList= None
+        self.listeCheminCompil= None
+        self.cheminJointure = None
+        self.colComp1 = None
+        self.colComp2 = None
+        self.colJoints = None
         self.frame = tk.Frame(self.parent, bg='#989292', width=1200, height=700)
         self.frame.grid()
         self.frame.grid_propagate(False)
@@ -50,7 +55,7 @@ class MyWindow:
 
         self.menufichier=tk.Menu(self.menubar,tearoff=0)
         self.menubar.add_cascade(label="Fichier",menu=self.menufichier)
-        self.menufichier.add_command(label="Ouvrir",command=self.load)
+        self.menufichier.add_command(label="Ouvrir",command=lambda: self.load(0, False))
         self.menufichier.add_separator()
         self.menufichier.add_command(label="Enregistrer",command=self.save)
         self.menufichier.add_command(label="Enregistrer Sous",command=self.saveas)
@@ -66,7 +71,7 @@ class MyWindow:
         self.cadre2.pack_propagate(0)
 
         #Petits panels du Panel cadre1
-        self.cadreFichier =tk.PanedWindow(self.cadre1,width= 475, height= 190, bd= 2, relief = 'sunken')
+        self.cadreFichier =tk.PanedWindow(self.cadre1,width= 475, height= 210, bd= 2, relief = 'sunken')
         self.cadreFichier.place(x=10,y=50)
         self.cadreFichier.pack_propagate(0)
 
@@ -104,23 +109,18 @@ class MyWindow:
         self.text.place(x=50,y=100, width =700, height=500)
 
         #cadreDate : Date,nombre,cellules vides
-        self.celluleVide =tk.Label(self.cadreDate,text='Cellules Vides')
-        self.celluleVide.place(x=50, y=30)
+        self.banChar =tk.Label(self.cadreDate,text='Caractères Indésirables')
+        self.banChar.place(x=50, y=30)
 
-        self.checkButtonCellule= tk.Checkbutton(self.cadreDate)
+        self.varCell=tk.IntVar()
+        self.checkButtonCellule= tk.Checkbutton(self.cadreDate,variable= self.varCell)
         self.checkButtonCellule.place(x=30,y=30)
 
         self.entryCaracteresIndesirables= tk.Entry(self.cadreDate)
         self.entryCaracteresIndesirables.place(x=260, y=30,  width=100, height=25)
 
-        self.caracteresIndesirables= tk.Label(self.cadreDate, text='Caractères Indesirables')
-        self.caracteresIndesirables.place(x=230, y=8)
-
-        self.formatNombre =tk.Label(self.cadreDate,text='Format Nombre')
-        self.formatNombre.place(x=50, y=120)
-
-        self.checkButtonNombre= tk.Checkbutton(self.cadreDate )
-        self.checkButtonNombre.place(x=30,y=120)
+        self.caracteresIndesirables= tk.Label(self.cadreDate, text='Valeurs')
+        self.caracteresIndesirables.place(x=280, y=8)
 
         self.formatEntree =tk.Label(self.cadreDate,text='Format Entrée ')
         self.formatEntree.place(x=260, y=60)
@@ -137,14 +137,16 @@ class MyWindow:
         self.formatDate =tk.Label(self.cadreDate,text='Format Date')
         self.formatDate.place(x=50, y=80)
 
-        self.checkButtonDate= tk.Checkbutton(self.cadreDate)
+        self.varDate=tk.IntVar()
+        self.checkButtonDate= tk.Checkbutton(self.cadreDate,variable= self.varDate)
         self.checkButtonDate.place(x=30,y=80)
 
         #cadreAnonymisation : Anonymisation et Doublon
         self.anonymisation =tk.Label(self.cadreAnonymisation,text='Anonymisation Données')
         self.anonymisation.place(x=50, y=30)
 
-        self.checkButtonAnonymisation= tk.Checkbutton(self.cadreAnonymisation )
+        self.varAnonymisation=tk.IntVar()
+        self.checkButtonAnonymisation= tk.Checkbutton(self.cadreAnonymisation,variable= self.varAnonymisation )
         self.checkButtonAnonymisation.place(x=30,y=30)
 
         self.entryAnonymisation = tk.Entry(self.cadreAnonymisation)
@@ -156,7 +158,8 @@ class MyWindow:
         self.identificationDoublon =tk.Label(self.cadreAnonymisation,text='Identification Doublon')
         self.identificationDoublon.place(x=50, y=80)
 
-        self.checkButtonDoublon= tk.Checkbutton(self.cadreAnonymisation)
+        self.varDoublon=tk.IntVar()
+        self.checkButtonDoublon= tk.Checkbutton(self.cadreAnonymisation,variable= self.varDoublon)
         self.checkButtonDoublon.place(x=30,y=80)
 
         self.entryDoublon= tk.Entry(self.cadreAnonymisation)
@@ -170,14 +173,15 @@ class MyWindow:
         self.compilationFichier =tk.Label(self.cadreFichier,text='Compilation Fichier')
         self.compilationFichier.place(x=50, y=20)
 
-        self.checkButtonCompilationFichier= tk.Checkbutton(self.cadreFichier)
+        self.varCompilation=tk.IntVar()
+        self.checkButtonCompilationFichier= tk.Checkbutton(self.cadreFichier,variable= self.varCompilation)
         self.checkButtonCompilationFichier.place(x=30,y=20)
 
-        self.button = tk.Button(self.cadreFichier, text='Chargement',bd='4',relief='raised', command=self.load)
+        self.button = tk.Button(self.cadreFichier, text='Chargement',bd='4',relief='raised', command=lambda: self.load(1, False))
         self.button.place(x=200, y=20, width=100, height=25)
 
-        self.liste = tk.Listbox(self.cadreFichier)
-        self.liste.place(x=350, y=30, width=100, height=50)
+        self.listeCompilation = tk.Listbox(self.cadreFichier)
+        self.listeCompilation.place(x=350, y=30, width=100, height=50)
 
         self.fichiers =tk.Label(self.cadreFichier,text='Fichiers')
         self.fichiers.place(x=370, y=5)
@@ -185,10 +189,14 @@ class MyWindow:
         self.jointureFichier =tk.Label(self.cadreFichier,text='Jointure Fichier')
         self.jointureFichier.place(x=50, y=90)
 
-        self.checkButtonJointureFichier= tk.Checkbutton(self.cadreFichier)
+        self.listeJointure = tk.Listbox(self.cadreFichier)
+        self.listeJointure.place(x=350, y=100, width=100, height=50)
+
+        self.varJointure=tk.IntVar()
+        self.checkButtonJointureFichier= tk.Checkbutton(self.cadreFichier,variable= self.varJointure)
         self.checkButtonJointureFichier.place(x=30,y=90)
 
-        self.button = tk.Button(self.cadreFichier, text='Chargement',bd='4',relief='raised', command=self.load)
+        self.button = tk.Button(self.cadreFichier, text='Chargement',bd='4',relief='raised', command=lambda: self.load(2, False))
         self.button.place(x=200, y=90, width=100, height=25)
 
         self.jointureFichiersColonne=tk.Label(self.cadreFichier,text='Colonne')
@@ -216,7 +224,8 @@ class MyWindow:
         self.categorisation =tk.Label(self.cadreCategorisation,text='Catégorisation')
         self.categorisation.place(x=50, y=20)
 
-        self.checkButtonCategorisation= tk.Checkbutton(self.cadreCategorisation)
+        self.varCategorisation=tk.IntVar()
+        self.checkButtonCategorisation= tk.Checkbutton(self.cadreCategorisation,variable= self.varCategorisation)
         self.checkButtonCategorisation.place(x=30,y=20)
 
         self.entryColonneCategorisation = tk.Entry(self.cadreCategorisation)
@@ -237,21 +246,44 @@ class MyWindow:
         self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Sortie')
         self.colonneCategorisation.place(x=280, y=58)
 
-    #Date Parametres
+    #Parametres
     def getParam(self):
+        if self.varDate.get():
+            if self.listDate.curselection()[0]==0:
+                self.dateFormat='%Y%m%d'
+            if self.listDate.curselection()[0]==1:
+                self.dateFormat='%Y%d%m'
+            if self.listDate.curselection()[0]==2:
+                self.dateFormat='%m%d%Y'
+            if self.listDate.curselection()[0]==3:
+                self.dateFormat='%m%Y%d'
+            if self.listDate.curselection()[0]==4:
+                self.dateFormat='%d%m%Y'
+            if self.listDate.curselection()[0]==5:
+                self.dateFormat='%d%Y%m'
 
-        if self.listDate.curselection()[0]==0:
-            self.dateFormat='%Y%m%d'
-        if self.listDate.curselection()[0]==1:
-            self.dateFormat='%Y%d%m'
-        if self.listDate.curselection()[0]==2:
-            self.dateFormat='%m%d%Y'
-        if self.listDate.curselection()[0]==3:
-            self.dateFormat='%m%Y%d'
-        if self.listDate.curselection()[0]==4:
-            self.dateFormat='%d%m%Y'
-        if self.listDate.curselection()[0]==5:
-            self.dateFormat='%d%Y%m'
+        if self.varDoublon.get():
+            entryDoublonString = self.entryDoublon.get().split(",")
+            self.colIndexDoublon = [int(s) for s in entryDoublonString]
+
+        if self.varAnonymisation.get():
+            entryAnonymisationString= self.entryAnonymisation.get().split(",")
+            self.colIndexAnonymisation= [int(s) for s in entryAnonymisationString]
+
+        if self.varCell.get():
+            self.banList= self.entryCaracteresIndesirables.get().split(",")
+
+        if self.varCompilation.get():
+            self.listeCheminCompil = []
+            for i in range(self.listeCompilation.size()):
+                self.listeCheminCompil.append(self.listeCompilation.get(i))
+
+        if self.varJointure.get():
+            self.cheminJointure = self.listeJointure.get(0)
+            self.colComp1 = int(self.entryJointureFichier1.get())
+            self.colComp2 = int(self.entryJointureFichier2.get())
+            entryJoinFichier3 = self.entryJointureFichier3.get().split(",")
+            self.colJoints = [int(s) for s in entryJoinFichier3]
 
     #Sauvegarder avec menu
     def save(self):
@@ -259,47 +291,78 @@ class MyWindow:
 
     #Nettoyer
     def clean(self):
-
-
         self.getParam()
-        self.cleaner = DC.Cleaner(self.filename, 0, 1, self.dateFormat, '/Users/Charles/Documents/Python/PFE/PFE_Data/Clean_Data/SampleCleanV5.XLSX')
-        self.cleaner.openWB()
+        self.cleaner = DC.Cleaner(self.filename)
+        self.cleaner.openWB(1, None)
+        if self.banList is not None:
+            self.cleaner.param(self.banList)
         self.cleaner.purify()
-        self.cleaner.changeDate()
-        self.cleaner.anonymize()
+        if self.dateFormat is not None:
+            self.cleaner.changeDate(self.dateFormat)
+        if self.colIndexDoublon is not None:
+            self.cleaner.doublons(self.colIndexDoublon)
+        if self.colIndexAnonymisation is not None:
+            self.cleaner.anonymize(self.colIndexAnonymisation)
+        if self.listeCheminCompil is not None:
+            self.cleaner.aggreg(self.listeCheminCompil)
+        if self.cheminJointure is not None:
+            self.cleaner.joint(self.cheminJointure, self.colComp1, self.colComp2, self.colJoints)
+        self.cleaner.purify()
+        self.saveas()
+        self.resetParam()
+        self.display()
 
 
     #Charger un fichier
-    def load(self):
-
-        name = askopenfilename(filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
-
-
-        if name:
-            if name.endswith('.csv'):
-                self.df = pd.read_csv(name)
+    def load(self, keyLoad, update, *args):
+        if update == False:
+            name = askopenfilename(filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
+            if name:
+                if keyLoad == 0:
+                    if name.endswith('.csv'):
+                        self.df = pd.read_csv(name)
+                    else:
+                        self.df = pd.read_excel(name)
+                    self.filename = name
+                    self.display()
+                if keyLoad == 1:
+                    self.listeCompilation.insert(tk.END, name)
+                if keyLoad == 2:
+                    self.listeJointure.insert(tk.END, name)
+        else:
+            if args[0].endswith('.csv'):
+                self.df = pd.read_csv(args[0])
             else:
-                self.df = pd.read_excel(name)
+                self.df = pd.read_excel(args[0])
+            self.display()
 
-            self.filename = name
+    #Reset Paramètres
+    def resetParam(self):
+        self.dateFormat= None
+        self.colIndexDoublon= None
+        self.colIndexAnonymisation= None
+        self.banList= None
+        self.listeCheminCompil= None
+        self.cheminJointure = None
+        self.colComp1 = None
+        self.colComp2 = None
+        self.colJoints = None
 
+    #def resetUI(self):
 
-            # display directly
-            #self.text.insert('end', str(self.df.head()) + '\n')
 
     #Afficher sur la zone
     def display(self):
         # ask for file if not loaded yet
-        if self.df is None:
-            self.load()
-        else:
             self.text.delete('1.0',tk.END)
-            self.text.insert('end', str(self.cleaner.getActiveSheet()) + '\n')
+            self.text.insert('end', str(self.df.head()) + '\n')
 
     #Sauvegarder un fichier sous
     def saveas(self):
         newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
-        print(newName.name)
+        self.newPath = newName.name
+        self.cleaner.saveWB(1, self.newPath)
+        self.load(None, True, self.newPath)
 
     #Effacer l'affichage
     def clear(self):
