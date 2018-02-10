@@ -11,6 +11,7 @@ except ImportError:
 import PIL
 from PIL import ImageTk, Image
 import pandas as pd
+import PFE_UI.UI.filePathGenerator.file as pg
 import sys, os
 from PFE_MondoClean.MondoClean.data_Cleaner_Module import data_Cleaner as DC
 if getattr(sys, 'frozen', False):
@@ -48,6 +49,7 @@ class MyWindow:
         self.frame = tk.Frame(self.parent, bg='#989292', width=1200, height=700)
         self.frame.grid()
         self.frame.grid_propagate(False)
+        self.dirPath = pg.getFilePath().replace('filePathGenerator','')
 
         #Menu
         self.menubar=tk.Menu(parent)
@@ -92,16 +94,20 @@ class MyWindow:
         self.labelTitreCadre1.place(x=0, y=0)
 
         #Image Doshas
-        self.im=Image.open("/Users/charles/Documents/Python/PFE/PFE_UI/UI/images/Logo_Doshas_V7.JPG")
+        self.im=Image.open(self.dirPath+"/images/Logo_Doshas_V7.JPG")
         self.photo=ImageTk.PhotoImage(self.im)
         self.labelDoshas=tk.Label(self.cadre2,image=self.photo, bg='#5A6932')
         self.labelDoshas.place(x=300, y=20, width=200 ,height=69)
 
-        #Image run (Clean)
-        self.play=Image.open("/Users/charles/Documents/Python/PFE/PFE_UI/UI/images/play_V2.JPG")
+        #Control panel (Clean/Reset/PullBack)
+        self.play=Image.open(self.dirPath+"/images/play_V2.JPG")
         self.photoPlay=ImageTk.PhotoImage(self.play)
         self.button = tk.Button(self.cadre2, bg='#5A6932',image=self.photoPlay,command=self.clean)
         self.button.place(x=400, y=620, width=64, height=64)
+        self.buttonPullBack = tk.Button(self.cadre2, bg='#5A6932',command=self.undo)
+        self.buttonPullBack.place(x=500, y=620, width=64, height=64)
+        self.buttonReset = tk.Button(self.cadre2, bg='#5A6932',command=self.resetCleaner)
+        self.buttonReset.place(x=300, y=620, width=64, height=64)
 
 
         #Zone d'affichage
@@ -291,9 +297,12 @@ class MyWindow:
 
     #Nettoyer
     def clean(self):
+        if self.cleaner is None:
+            self.cleaner = DC.Cleaner()
+        else:
+            pass
         self.getParam()
-        self.cleaner = DC.Cleaner(self.filename)
-        self.cleaner.openWB(1, None)
+        self.cleaner.openWB(1, self.filename)
         if self.banList is not None:
             self.cleaner.param(self.banList)
         self.cleaner.purify()
@@ -332,8 +341,10 @@ class MyWindow:
         else:
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
+                self.filename = args[0]
             else:
                 self.df = pd.read_excel(args[0])
+                self.filename = args[0]
             self.display()
 
     #Reset Paramètres
@@ -348,6 +359,11 @@ class MyWindow:
         self.colComp2 = None
         self.colJoints = None
 
+    def undo(self):
+        self.load(None, True, self.cleaner.timeMachine('pullBack'))
+
+    def resetCleaner(self):
+        self.load(None, True, self.cleaner.timeMachine('fullReset'))
     #def resetUI(self):
 
 
@@ -363,6 +379,8 @@ class MyWindow:
         self.newPath = newName.name
         self.cleaner.saveWB(1, self.newPath)
         self.load(None, True, self.newPath)
+        self.cleaner.openWB(1, self.filename)
+        self.newPath = None
 
     #Effacer l'affichage
     def clear(self):
