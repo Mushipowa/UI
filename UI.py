@@ -428,10 +428,11 @@ class MyWindow:
             if self.listModeCategorisation.curselection()[0]==1:
                 self.modeCateg='substitute'
             if self.modeCateg == 'substitute':
-                for i in range(entryCategorisationKeyString):
+                for i in range(len(entryCategorisationKeyString)):
                     self.changes.update({entryCategorisationKeyString[i]:entryCategorisationValueString[i]})
             else:
-                pass
+                for i in range(len(entryCategorisationKeyString)):
+                    self.changes.update({entryCategorisationKeyString[i]:entryCategorisationValueString[i].split(":")})
 
 
     #Sauvegarder avec menu
@@ -510,7 +511,6 @@ class MyWindow:
         self.colIndexC = None
         self.modeCateg =  None
         self.changes = {}
-
 
     def undo(self):
         self.load(None, True, self.cleaner.timeMachine('pullBack'))
