@@ -10,6 +10,7 @@ except ImportError:
     from tkinter.filedialog import askopenfilename
 import PIL
 from PIL import ImageTk, Image
+import threading
 import pandas as pd
 import PFE_UI.UI.filePathGenerator.file as pg
 import sys, os
@@ -50,6 +51,7 @@ class MyWindow:
         self.modeCateg = None
         self.changes = {}
         self.bytes=0
+        self.maxbytes = 100
 
         self.frame = tk.Frame(self.parent, bg='#989292', width=1200, height=700)
         self.frame.grid()
@@ -62,7 +64,7 @@ class MyWindow:
 
         self.menufichier=tk.Menu(self.menubar,tearoff=0)
         self.menubar.add_cascade(label="Fichier",menu=self.menufichier)
-        self.menufichier.add_command(label="Ouvrir",command=lambda: self.load(0, False))
+        self.menufichier.add_command(label="Nouveau Fichier",command=lambda: self.load(0, False))
         self.menufichier.add_separator()
         self.menufichier.add_command(label="Enregistrer",command=self.save)
         self.menufichier.add_command(label="reset ",command=self.resetUI)
@@ -298,20 +300,20 @@ class MyWindow:
         self.style.theme_use('alt')
         self.style.configure("green.Horizontal.TProgressbar",
             foreground='#5A6932', background='#5A6932')
-        self.pB = ttk.Progressbar(self.cadre2,orient ="horizontal",length = 700, mode ="indeterminate",style="green.Horizontal.TProgressbar")
+        self.pB = ttk.Progressbar(self.cadre2,orient ="horizontal",length = 700, mode ="determinate",style="green.Horizontal.TProgressbar")
         self.pB.place(x=50,y=601)
-        #self.pB["maximum"] = 100
-        #self.pB["value"] = 0
+        self.pB["maximum"] = 100
+        self.pB["value"] = 0
 
     def start(self):
-        self.pB["value"] = 0
-        self.maxbytes = 1000
-        self.pB["maximum"] = 100
-        self.read_bytes()
+        if not self.thread.isAlive():
+            self.pB["value"] = 0
+            self.pB["maximum"] = 100
+            self.pB.start()
+            self.read_bytes()
 
     def read_bytes(self):
-        '''simulate reading 500 bytes; update progress bar'''
-        self.bytes += 100
+        self.bytes = self.cleaner.getProgress()
         self.pB["value"] = self.bytes
         if self.bytes < self.maxbytes:
             # read more bytes after 100 ms
@@ -441,7 +443,8 @@ class MyWindow:
 
     #Nettoyer
     def clean(self):
-
+        self.thread = threading.Thread()
+        self.thread.__init__(target=self.pB.start(), args=())
         if self.cleaner is None:
             self.cleaner = DC.Cleaner()
         else:
@@ -449,7 +452,6 @@ class MyWindow:
         self.getParam()
         self.cleaner.openWB(1, self.filename)
         if self.banList is not None:
-            #self.start()
             self.cleaner.param(self.banList)
         self.cleaner.purify()
         if self.dateFormat is not None:
@@ -567,7 +569,10 @@ class MyWindow:
     def saveas(self):
         newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('CSV', '*.csv',), ('Excel', ('*.xlsx'))])
         self.newPath = newName.name
-        self.cleaner.saveWB(1, self.newPath)
+        if self.colIndexAnonymisation is None:
+            self.cleaner.saveWB(1, self.newPath)
+        else:
+            self.cleaner.saveWB(2, self.newPath)
         self.load(None, True, self.newPath)
         self.cleaner.openWB(1, self.filename)
         self.newPath = None
