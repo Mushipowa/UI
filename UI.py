@@ -14,6 +14,7 @@ import threading
 import pandas as pd
 import PFE_UI.UI.filePathGenerator.file as pg
 import sys, os
+import time
 from PFE_MondoClean.MondoClean.data_Cleaner_Module import data_Cleaner as DC
 if getattr(sys, 'frozen', False):
     # If the application is run as a bundle, the pyInstaller bootloader
@@ -309,7 +310,6 @@ class MyWindow:
         if not self.thread.isAlive():
             self.pB["value"] = 0
             self.pB["maximum"] = 100
-            self.pB.start()
             self.read_bytes()
 
     def read_bytes(self):
@@ -317,7 +317,8 @@ class MyWindow:
         self.pB["value"] = self.bytes
         if self.bytes < self.maxbytes:
             # read more bytes after 100 ms
-            self.after(100, self.read_bytes)
+            time.sleep(0.01)
+            self.read_bytes
 
     #checkButtonDate
 
@@ -443,14 +444,14 @@ class MyWindow:
 
     #Nettoyer
     def clean(self):
-        self.thread = threading.Thread()
-        self.thread.__init__(target=self.pB.start(), args=())
         if self.cleaner is None:
             self.cleaner = DC.Cleaner()
         else:
             pass
         self.getParam()
         self.cleaner.openWB(1, self.filename)
+        self.thread = threading.Thread()
+        self.thread.__init__(target=self.start(), args=())
         if self.banList is not None:
             self.cleaner.param(self.banList)
         self.cleaner.purify()
@@ -567,7 +568,7 @@ class MyWindow:
 
     #Sauvegarder un fichier sous
     def saveas(self):
-        newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('CSV', '*.csv',), ('Excel', ('*.xlsx'))])
+        newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('Excel', ('*.xlsx'))])
         self.newPath = newName.name
         if self.colIndexAnonymisation is None:
             self.cleaner.saveWB(1, self.newPath)
