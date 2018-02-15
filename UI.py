@@ -296,29 +296,21 @@ class MyWindow:
         self.listModeCategorisation.insert(tk.END,"Chaine de caractères")
         self.listModeCategorisation.configure(state='disabled')
 
-    #Progressbar
-        self.style = ttk.Style()
-        self.style.theme_use('alt')
-        self.style.configure("green.Horizontal.TProgressbar",
-            foreground='#5A6932', background='#5A6932')
-        self.pB = ttk.Progressbar(self.cadre2,orient ="horizontal",length = 700, mode ="determinate",style="green.Horizontal.TProgressbar")
-        self.pB.place(x=50,y=601)
-        self.pB["maximum"] = 100
-        self.pB["value"] = 0
-
-    def start(self):
-        if not self.thread.isAlive():
-            self.pB["value"] = 0
-            self.pB["maximum"] = 100
-            self.read_bytes()
-
-    def read_bytes(self):
-        self.bytes = self.cleaner.getProgress()
-        self.pB["value"] = self.bytes
-        if self.bytes < self.maxbytes:
-            # read more bytes after 100 ms
-            time.sleep(0.01)
-            self.read_bytes
+    # #Progressbar
+    #     self.style = ttk.Style()
+    #     self.style.theme_use('alt')
+    #     self.style.configure("green.Horizontal.TProgressbar",
+    #         foreground='#5A6932', background='#5A6932')
+    #     self.pB = ttk.Progressbar(self.cadre2,orient ="horizontal",length = 700, mode ="determinate",style="green.Horizontal.TProgressbar")
+    #     self.pB.place(x=50,y=601)
+    #     self.pB["maximum"] = 100
+    #     self.pB["value"] = 0
+    #
+    # def startPB(self, max):
+    #     self.pB["maximum"] = max
+    #
+    # def step_bytes(self):
+    #     self.pB.step(1)
 
     #checkButtonDate
 
@@ -450,8 +442,6 @@ class MyWindow:
             pass
         self.getParam()
         self.cleaner.openWB(1, self.filename)
-        self.thread = threading.Thread()
-        self.thread.__init__(target=self.start(), args=())
         if self.banList is not None:
             self.cleaner.param(self.banList)
         self.cleaner.purify()
