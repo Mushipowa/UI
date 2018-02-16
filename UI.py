@@ -67,9 +67,6 @@ class MyWindow:
         self.menubar.add_cascade(label="Fichier",menu=self.menufichier)
         self.menufichier.add_command(label="Nouveau Fichier",command=lambda: self.load(0, False))
         self.menufichier.add_separator()
-        self.menufichier.add_command(label="Enregistrer",command=self.save)
-        self.menufichier.add_command(label="reset ",command=self.resetUI)
-        self.menufichier.add_separator()
         self.menufichier.add_command(label="Quitter",command=self.parent.destroy)
 
 
@@ -467,7 +464,7 @@ class MyWindow:
     #Charger un fichier
     def load(self, keyLoad, update, *args):
         if update == False:
-            name = askopenfilename(filetypes=[('CSV', '*.csv',), ('Excel', ('*.xls', '*.xlsx'))])
+            name = askopenfilename(filetypes=[('Excel', ('*.xls', '*.xlsx'))])
             if name:
                 if keyLoad == 0:
                     if name.endswith('.csv'):
