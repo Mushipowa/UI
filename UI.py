@@ -10,13 +10,13 @@ except ImportError:
     from tkinter.filedialog import askopenfilename
 import PIL
 from PIL import ImageTk, Image
-import threading
+#import threading
 import pandas as pd
-import PFE_UI.UI.filePathGenerator.file as pg
+import pathGen as pg
 import sys, os
 import time
-from PFE_MondoClean.MondoClean.data_Cleaner_Module import data_Cleaner as DC
-if getattr(sys, 'frozen', False):
+import data_Cleaner as DC
+if getattr(sys, 'frozen', False) and getattr(sys, '_MEIPASS', None):
     # If the application is run as a bundle, the pyInstaller bootloader
     # extends the sys module by a flag frozen=True and sets the app
     # path into variable _MEIPASS'.
@@ -25,6 +25,7 @@ else:
     application_path = os.path.dirname(os.path.abspath('file'))
 
 TK_DND_PATH = os.path.join(application_path,'tkdnd2.8')
+
 # --- classes ---
 class MyWindow:
 
@@ -96,31 +97,37 @@ class MyWindow:
         self.cadreCategorisation.pack_propagate(0)
 
         #Titre panel paramètres
-        self.labelTitreCadre1 = tk.Label(self.cadre1,text='Paramètres',justify='center',width=55, bg='#5E5455',fg='white')
+        self.labelTitreCadre1 = tk.Label(self.cadre1,text='Paramètres',justify='center',width=71, bg='#5E5455',fg='white')
         self.labelTitreCadre1.place(x=0, y=0)
 
 
         #Image Doshas
-        self.im=Image.open(self.dirPath+"/filePathGenerator/images/Logo_Doshas_V7.JPG")
+        self.im=Image.open(self.dirPath+"/images/Logo_Doshas_V7.JPG")
         self.photo=ImageTk.PhotoImage(self.im)
         self.labelDoshas=tk.Label(self.cadre2,image=self.photo, bg='#5A6932')
         self.labelDoshas.place(x=300, y=20, width=200 ,height=69)
 
         #Control panel (Clean/Reset/PullBack)
-        self.play=Image.open(self.dirPath+"/filePathGenerator/images/play_V4.JPG")
+        self.play=Image.open(self.dirPath+"/images/play_V4.JPG")
         self.photoPlay=ImageTk.PhotoImage(self.play)
-        self.button = tk.Button(self.cadre2,image=self.photoPlay,command=self.clean)
-        self.button.place(x=380, y=620, width=64, height=64)
+        self.button = tk.Button(self.cadre2,image=self.photoPlay, bg='#A7A1A2',command=self.clean)
+        self.button.place(x=380, y=610, width=60, height=60)
+        self.labelNettoyer = tk.Label(self.cadre2, text='Nettoyer', bg='#A7A1A2')
+        self.labelNettoyer.place(x=383,y=670)
 
-        self.pullBack=Image.open(self.dirPath+"/filePathGenerator/images/retour_V3.JPG")
+        self.pullBack=Image.open(self.dirPath+"/images/retour_V3.JPG")
         self.photoPullBack=ImageTk.PhotoImage(self.pullBack)
-        self.buttonPullBack = tk.Button(self.cadre2,image=self.photoPullBack,command=self.undo)
-        self.buttonPullBack.place(x=100, y=630, width=50, height=50)
+        self.buttonPullBack = tk.Button(self.cadre2,image=self.photoPullBack, bg='#A7A1A2',command=self.undo)
+        self.buttonPullBack.place(x=100, y=610, width=60, height=60)
+        self.labelRetour = tk.Label(self.cadre2, text='Retour', bg='#A7A1A2')
+        self.labelRetour.place(x=110,y=670)
 
-        self.reset=Image.open(self.dirPath+"/filePathGenerator/images/reset.JPG")
+        self.reset=Image.open(self.dirPath+"/images/reset.JPG")
         self.photoReset=ImageTk.PhotoImage(self.reset)
-        self.buttonReset = tk.Button(self.cadre2, bg='#5A6932',image=self.photoReset,command=self.resetCleaner)
-        self.buttonReset.place(x=640, y=630, width=50, height=50)
+        self.buttonReset = tk.Button(self.cadre2, bg='#A7A1A2',image=self.photoReset,command=self.resetCleaner)
+        self.buttonReset.place(x=640, y=610, width=60, height=60)
+        self.labelReset = tk.Label(self.cadre2, text='Réinitialiser', bg='#A7A1A2')
+        self.labelReset.place(x=638,y=670)
 
 
         #Zone d'affichage
@@ -138,17 +145,17 @@ class MyWindow:
 
         self.varCell=tk.IntVar()
         self.checkButtonCellule= tk.Checkbutton(self.cadreDate,variable= self.varCell,command=self.unlockCaracteres)
-        self.checkButtonCellule.place(x=30,y=30)
+        self.checkButtonCellule.place(x=20,y=28)
 
         self.entryCaracteresIndesirables= tk.Entry(self.cadreDate,state='normal')
         self.entryCaracteresIndesirables.place(x=260, y=30,  width=100, height=25)
         self.entryCaracteresIndesirables.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.caracteresIndesirables= tk.Label(self.cadreDate, text='Valeurs')
-        self.caracteresIndesirables.place(x=280, y=18, width=50, height=12)
+        self.caracteresIndesirables.place(x=280, y=16, width=50, height=12)
 
         self.formatEntree =tk.Label(self.cadreDate,text='Format Entrée ')
-        self.formatEntree.place(x=260, y=60)
+        self.formatEntree.place(x=270, y=66, width=80, height=12)
 
         self.listDate = tk.Listbox(self.cadreDate, state='normal')
         self.listDate.place(x=260, y=80, width=100, height=30)
@@ -165,7 +172,7 @@ class MyWindow:
 
         self.varDate=tk.IntVar()
         self.checkButtonDate= tk.Checkbutton(self.cadreDate,variable= self.varDate,command=self.unlockDate)
-        self.checkButtonDate.place(x=30,y=80)
+        self.checkButtonDate.place(x=20,y=78)
 
         #cadreAnonymisation : Anonymisation et Doublon
         self.anonymisation =tk.Label(self.cadreAnonymisation,text='Anonymisation Données')
@@ -173,28 +180,28 @@ class MyWindow:
 
         self.varAnonymisation=tk.IntVar()
         self.checkButtonAnonymisation= tk.Checkbutton(self.cadreAnonymisation,variable= self.varAnonymisation, command=self.unlockAnonymisation )
-        self.checkButtonAnonymisation.place(x=30,y=30)
+        self.checkButtonAnonymisation.place(x=20,y=30)
 
         self.entryAnonymisation = tk.Entry(self.cadreAnonymisation,state='normal')
         self.entryAnonymisation.place(x=260, y=30, width=100, height=25)
         self.entryAnonymisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneAnonymisation =tk.Label(self.cadreAnonymisation,text='Colonne')
-        self.colonneAnonymisation.place(x=270, y=18, width=70, height=12)
+        self.colonneAnonymisation.place(x=270, y=16, width=70, height=12)
 
         self.identificationDoublon =tk.Label(self.cadreAnonymisation,text='Identification Doublon')
         self.identificationDoublon.place(x=50, y=80)
 
         self.varDoublon=tk.IntVar()
         self.checkButtonDoublon= tk.Checkbutton(self.cadreAnonymisation,variable= self.varDoublon,command= self.unlockDoublon)
-        self.checkButtonDoublon.place(x=30,y=80)
+        self.checkButtonDoublon.place(x=20,y=78)
 
         self.entryDoublon= tk.Entry(self.cadreAnonymisation, state='normal')
         self.entryDoublon.place(x=260, y=80, width=100, height=25)
         self.entryDoublon.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneDoublon =tk.Label(self.cadreAnonymisation,text='Colonne')
-        self.colonneDoublon.place(x=270, y=68, width=70, height=12)
+        self.colonneDoublon.place(x=270, y=66, width=70, height=12)
 
 
         #cadreFichier : Compilation et Jointure
@@ -203,7 +210,7 @@ class MyWindow:
 
         self.varCompilation=tk.IntVar()
         self.checkButtonCompilationFichier= tk.Checkbutton(self.cadreFichier,variable= self.varCompilation, command = self.unlockCompilation)
-        self.checkButtonCompilationFichier.place(x=30,y=20)
+        self.checkButtonCompilationFichier.place(x=20,y=18)
 
         self.buttonCompil = tk.Button(self.cadreFichier,state='normal',text='Chargement',bd='4',relief='raised', command=lambda: self.load(1, False))
         self.buttonCompil.place(x=200, y=20, width=100, height=25)
@@ -228,7 +235,7 @@ class MyWindow:
 
         self.varJointure=tk.IntVar()
         self.checkButtonJointureFichier= tk.Checkbutton(self.cadreFichier,variable= self.varJointure, command=self.unlockJointure)
-        self.checkButtonJointureFichier.place(x=30,y=120)
+        self.checkButtonJointureFichier.place(x=20,y=118)
 
         self.buttonJointure = tk.Button(self.cadreFichier, text='Chargement',bd='4',relief='raised', command=lambda: self.load(2, False))
         self.buttonJointure.place(x=200, y=120, width=100, height=25)
@@ -252,7 +259,7 @@ class MyWindow:
         self.entryJointureFichier2.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.jointureFichier3 =tk.Label(self.cadreFichier,text='Colonne à ajouter')
-        self.jointureFichier3.place(x=340, y=160)
+        self.jointureFichier3.place(x=350, y=160)
 
         self.entryJointureFichier3 = tk.Entry(self.cadreFichier,state='normal')
         self.entryJointureFichier3.place(x=350, y=180, width=100, height=25)
@@ -264,28 +271,28 @@ class MyWindow:
 
         self.varCategorisation=tk.IntVar()
         self.checkButtonCategorisation= tk.Checkbutton(self.cadreCategorisation,variable= self.varCategorisation, command=self.unlockCategorisation)
-        self.checkButtonCategorisation.place(x=30,y=20)
+        self.checkButtonCategorisation.place(x=20,y=18)
 
         self.entryColonneCategorisation = tk.Entry(self.cadreCategorisation,state='normal')
         self.entryColonneCategorisation.place(x=50, y=80, width=100, height=25)
         self.entryColonneCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Colonne')
-        self.colonneCategorisation.place(x=60, y=68, width=70, height=12)
+        self.colonneCategorisation.place(x=60, y=66, width=70, height=12)
 
         self.entryEntreeCategorisation = tk.Entry(self.cadreCategorisation,state='normal')
         self.entryEntreeCategorisation.place(x=200, y=80, width=100, height=25)
         self.entryEntreeCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Entrée')
-        self.colonneCategorisation.place(x=225, y=68, width=40, height=12)
+        self.colonneCategorisation.place(x=225, y=66, width=40, height=12)
 
         self.entrySortieCategorisation = tk.Entry(self.cadreCategorisation,state='normal')
         self.entrySortieCategorisation.place(x=350, y=80, width=100, height=25)
         self.entrySortieCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Sortie')
-        self.colonneCategorisation.place(x=375, y=68, width=40, height=12)
+        self.colonneCategorisation.place(x=375, y=66, width=40, height=12)
 
         self.listModeCategorisation = tk.Listbox(self.cadreCategorisation, state='normal')
         self.listModeCategorisation.place(x=250, y=15, width=140, height=40)
