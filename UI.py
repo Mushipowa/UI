@@ -12,10 +12,12 @@ import PIL
 from PIL import ImageTk, Image
 #import threading
 import pandas as pd
-import pathGen as pg
+import PFE_UI.UI.filePathGenerator.file as pg  #pathgen as pg
+import PFE_UI.UI.Operator as op
 import sys, os
 import time
-import data_Cleaner as DC
+import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_Cleaner as DC #data_Cleaner as DC
+import PFE_UI.UI.BarManager as bm
 if getattr(sys, 'frozen', False) and getattr(sys, '_MEIPASS', None):
     # If the application is run as a bundle, the pyInstaller bootloader
     # extends the sys module by a flag frozen=True and sets the app
@@ -51,6 +53,7 @@ class MyWindow:
         self.colJoints = None
         self.colIndexC = None
         self.modeCateg = None
+        self.newPath = None
         self.changes = {}
         self.bytes=0
         self.maxbytes = 100
@@ -102,27 +105,27 @@ class MyWindow:
 
 
         #Image Doshas
-        self.im=Image.open(self.dirPath+"/images/Logo_Doshas_V7.JPG")
+        self.im=Image.open(self.dirPath+"filePathGenerator/images/Logo_Doshas_V7.JPG")
         self.photo=ImageTk.PhotoImage(self.im)
         self.labelDoshas=tk.Label(self.cadre2,image=self.photo, bg='#5A6932')
         self.labelDoshas.place(x=300, y=20, width=200 ,height=69)
 
         #Control panel (Clean/Reset/PullBack)
-        self.play=Image.open(self.dirPath+"/images/play_V4.JPG")
+        self.play=Image.open(self.dirPath+"filePathGenerator/images/play_V4.JPG")
         self.photoPlay=ImageTk.PhotoImage(self.play)
         self.button = tk.Button(self.cadre2,image=self.photoPlay, bg='#A7A1A2',command=self.clean)
         self.button.place(x=380, y=610, width=60, height=60)
         self.labelNettoyer = tk.Label(self.cadre2, text='Nettoyer', bg='#A7A1A2')
         self.labelNettoyer.place(x=383,y=670)
 
-        self.pullBack=Image.open(self.dirPath+"/images/retour_V3.JPG")
+        self.pullBack=Image.open(self.dirPath+"filePathGenerator/images/retour_V3.JPG")
         self.photoPullBack=ImageTk.PhotoImage(self.pullBack)
         self.buttonPullBack = tk.Button(self.cadre2,image=self.photoPullBack, bg='#A7A1A2',command=self.undo)
         self.buttonPullBack.place(x=100, y=610, width=60, height=60)
         self.labelRetour = tk.Label(self.cadre2, text='Retour', bg='#A7A1A2')
         self.labelRetour.place(x=110,y=670)
 
-        self.reset=Image.open(self.dirPath+"/images/reset.JPG")
+        self.reset=Image.open(self.dirPath+"filePathGenerator/images/reset.JPG")
         self.photoReset=ImageTk.PhotoImage(self.reset)
         self.buttonReset = tk.Button(self.cadre2, bg='#A7A1A2',image=self.photoReset,command=self.resetCleaner)
         self.buttonReset.place(x=640, y=610, width=60, height=60)
@@ -300,21 +303,16 @@ class MyWindow:
         self.listModeCategorisation.insert(tk.END,"Chaine de caractères")
         self.listModeCategorisation.configure(state='disabled')
 
-    # #Progressbar
-    #     self.style = ttk.Style()
-    #     self.style.theme_use('alt')
-    #     self.style.configure("green.Horizontal.TProgressbar",
-    #         foreground='#5A6932', background='#5A6932')
-    #     self.pB = ttk.Progressbar(self.cadre2,orient ="horizontal",length = 700, mode ="determinate",style="green.Horizontal.TProgressbar")
-    #     self.pB.place(x=50,y=601)
-    #     self.pB["maximum"] = 100
-    #     self.pB["value"] = 0
-    #
-    # def startPB(self, max):
-    #     self.pB["maximum"] = max
-    #
-    # def step_bytes(self):
-    #     self.pB.step(1)
+    #Progressbar
+        self.style = ttk.Style()
+        self.style.theme_use('alt')
+        self.style.configure("green.Horizontal.TProgressbar",
+            foreground='#5A6932', background='#5A6932')
+        self.varBar = tk.DoubleVar()
+        self.pB = ttk.Progressbar(self.cadre2, variable=self.varBar, orient="horizontal", length=700, mode="determinate", style="green.Horizontal.TProgressbar")
+        self.pB.place(x=50,y=601)
+        self.pB["maximum"] = 100
+        self.pB["value"] = 0
 
     #checkButtonDate
 
@@ -442,30 +440,18 @@ class MyWindow:
     def clean(self):
         if self.cleaner is None:
             self.cleaner = DC.Cleaner()
+            barManager = bm.BarManager(self, self.cleaner)
+            barManager.start()
         else:
             pass
         self.getParam()
-        self.cleaner.openWB(1, self.filename)
-        if self.banList is not None:
-            self.cleaner.param(self.banList)
-        self.cleaner.purify()
-        if self.dateFormat is not None:
-            self.cleaner.changeDate(self.dateFormat)
-        if self.colIndexDoublon is not None:
-            self.cleaner.doublons(self.colIndexDoublon)
-        if self.colIndexAnonymisation is not None:
-            self.cleaner.anonymize(self.colIndexAnonymisation)
-        if self.listeCheminCompil is not None:
-            self.cleaner.aggreg(self.listeCheminCompil)
-        if self.cheminJointure is not None:
-            self.cleaner.joint(self.cheminJointure, self.colComp1, self.colComp2, self.colJoints)
-        if self.modeCateg is not None:
-            self.cleaner.categorize(self.modeCateg, self.colIndexC, self.changes)
-        self.cleaner.purify()
-        self.saveas()
-        self.resetParam()
-        self.resetUI()
-        self.display()
+        self.feedback('Initialisation des traitements..')
+        operator = op.Operator(self, self.cleaner, self.filename, self.banList, self.dateFormat,
+                            self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
+                    self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath)
+        operator.setMod('clean')
+        operator.start()
+
 
 
     #Charger un fichier
@@ -475,8 +461,10 @@ class MyWindow:
             if name:
                 if keyLoad == 0:
                     if name.endswith('.csv'):
+                        self.feedback('Ouverture du fichier...')
                         self.df = pd.read_csv(name)
                     else:
+                        self.feedback('Ouverture du fichier...')
                         self.df = pd.read_excel(name)
                     self.filename = name
                     self.buttonChargement.place_forget()
@@ -486,6 +474,7 @@ class MyWindow:
                 if keyLoad == 2:
                     self.listeJointure.insert(tk.END, name)
         else:
+            self.feedback('Chargement du nouveau fichier...')
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
                 self.filename = args[0]
@@ -556,7 +545,6 @@ class MyWindow:
 
     #Afficher sur la zone
     def display(self):
-        # ask for file if not loaded yet
             self.text.delete('1.0',tk.END)
             self.text.insert('end', str(self.df.head()) + '\n')
 
@@ -564,17 +552,23 @@ class MyWindow:
     def saveas(self):
         newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('Excel', ('*.xlsx'))])
         self.newPath = newName.name
-        if self.colIndexAnonymisation is None:
-            self.cleaner.saveWB(1, self.newPath)
-        else:
-            self.cleaner.saveWB(2, self.newPath)
-        self.load(None, True, self.newPath)
-        self.cleaner.openWB(1, self.filename)
-        self.newPath = None
+        operator = op.Operator(self, self.cleaner, self.filename, self.banList, self.dateFormat,
+                            self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
+                    self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath)
+        operator.setMod('save')
+        operator.start()
 
     #Effacer l'affichage
     def clear(self):
         self.text.delete('1.0',tk.END)
+
+    def setBarValue(self, value):
+        self.varBar.set(value)
+        self.parent.update_idletasks()
+
+    def feedback(self, text):
+        self.text.delete('1.0',tk.END)
+        self.text.insert('end', text)
 
 
 # --- main ---
