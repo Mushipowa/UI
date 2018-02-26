@@ -5,7 +5,7 @@ class Operator(Thread):
 
     def __init__(self, ui, cleaner, filename, banList, dateFormat, colIndexDoublon,
                 colIndexAnonymisation, listeCheminCompil, cheminJointure, colComp1,
-                colComp2, colJoints, modeCateg, colIndexC, changes, newPath):
+                colComp2, colJoints, modeCateg, colIndexC, changes, newPath, colIndexApparition, colIndexAddition):
         Thread.__init__(self)
         self.ui = ui
         self.cleaner = cleaner
@@ -23,6 +23,8 @@ class Operator(Thread):
         self.colIndexC = colIndexC
         self.changes = changes
         self.newPath = newPath
+        self.colIndexApparition = colIndexApparition
+        self.colIndexAddition = colIndexAddition
         self.key = None
         self.daemon = True
 
@@ -51,6 +53,9 @@ class Operator(Thread):
             if self.modeCateg is not None:
                 self.ui.feedback('Catégorisation des données...')
                 self.cleaner.categorize(self.modeCateg, self.colIndexC, self.changes)
+            if self.colIndexApparition is not None:
+                self.ui.feedback('Calcul apparition des valeurs...')
+                self.cleaner.count(self.colIndexApparition)
             self.cleaner.purify()
             self.callBackUI()
         if self.key == 'save':
@@ -71,7 +76,6 @@ class Operator(Thread):
             self.ui.saveas()
             self.ui.resetParam()
             self.ui.resetUI()
-            self.ui.display()
         if self.key == 'save':
             self.ui.load(None, True, self.newPath)
             self.ui.newPath = None
