@@ -46,7 +46,8 @@ class MyWindow:
         self.colIndexDoublon= None
         self.colIndexAnonymisation= None
         self.colIndexApparition = None
-        self.colIndexAddition = None
+        self.colIndexAdditionIdentification = None
+        self.colIndexAdditionAssommer = None
         self.banList= None
         self.listeCheminCompil= None
         self.cheminJointure = None
@@ -105,7 +106,6 @@ class MyWindow:
         self.labelTitreCadre1 = tk.Label(self.cadre1,text='Paramètres',justify='center',width=71, bg='#5E5455',fg='white')
         self.labelTitreCadre1.place(x=0, y=0)
 
-
         #Image Doshas
         self.im=Image.open(self.dirPath+"filePathGenerator/images/Logo_Doshas_V7.JPG")
         self.photo=ImageTk.PhotoImage(self.im)
@@ -153,17 +153,17 @@ class MyWindow:
         self.checkButtonCellule.place(x=20,y=28)
 
         self.entryCaracteresIndesirables= tk.Entry(self.cadreDate,state='normal')
-        self.entryCaracteresIndesirables.place(x=260, y=30,  width=100, height=25)
+        self.entryCaracteresIndesirables.place(x=290, y=30,  width=100, height=25)
         self.entryCaracteresIndesirables.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.caracteresIndesirables= tk.Label(self.cadreDate, text='Valeurs')
-        self.caracteresIndesirables.place(x=280, y=16, width=50, height=12)
+        self.caracteresIndesirables.place(x=310, y=16, width=50, height=12)
 
         self.formatEntree =tk.Label(self.cadreDate,text='Format Entrée ')
-        self.formatEntree.place(x=270, y=66, width=100, height=12)
+        self.formatEntree.place(x=295, y=66, width=100, height=12)
 
         self.listDate = tk.Listbox(self.cadreDate, state='normal')
-        self.listDate.place(x=260, y=80, width=100, height=30)
+        self.listDate.place(x=290, y=80, width=100, height=30)
         self.listDate.insert(tk.END,"AAAA/MM/JJ")
         self.listDate.insert(tk.END,"AAAA/JJ/MM")
         self.listDate.insert(tk.END,"MM/JJ/AAAA")
@@ -188,11 +188,11 @@ class MyWindow:
         self.checkButtonAnonymisation.place(x=20,y=30)
 
         self.entryAnonymisation = tk.Entry(self.cadreAnonymisation,state='normal')
-        self.entryAnonymisation.place(x=260, y=30, width=100, height=25)
+        self.entryAnonymisation.place(x=290, y=30, width=100, height=25)
         self.entryAnonymisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneAnonymisation =tk.Label(self.cadreAnonymisation,text='Colonne')
-        self.colonneAnonymisation.place(x=270, y=16, width=70, height=12)
+        self.colonneAnonymisation.place(x=300, y=16, width=70, height=12)
 
         self.identificationDoublon =tk.Label(self.cadreAnonymisation,text='Identification Doublon')
         self.identificationDoublon.place(x=50, y=80)
@@ -202,11 +202,11 @@ class MyWindow:
         self.checkButtonDoublon.place(x=20,y=78)
 
         self.entryDoublon= tk.Entry(self.cadreAnonymisation, state='normal')
-        self.entryDoublon.place(x=260, y=80, width=100, height=25)
+        self.entryDoublon.place(x=290, y=80, width=100, height=25)
         self.entryDoublon.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneDoublon =tk.Label(self.cadreAnonymisation,text='Colonne')
-        self.colonneDoublon.place(x=270, y=66, width=70, height=12)
+        self.colonneDoublon.place(x=300, y=66, width=70, height=12)
 
         self.apparitionValeur =tk.Label(self.cadreAnonymisation,text='Nombre apparition')
         self.apparitionValeur.place(x=50, y=130)
@@ -216,11 +216,11 @@ class MyWindow:
         self.checkApparitionValeur.place(x=20,y=126)
 
         self.entryApparition= tk.Entry(self.cadreAnonymisation, state='normal')
-        self.entryApparition.place(x=260, y=130, width=100, height=25)
+        self.entryApparition.place(x=290, y=130, width=100, height=25)
         self.entryApparition.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneApparition =tk.Label(self.cadreAnonymisation,text='Colonne')
-        self.colonneApparition.place(x=270, y=116, width=70, height=12)
+        self.colonneApparition.place(x=300, y=116, width=70, height=12)
 
         self.additionValeur =tk.Label(self.cadreAnonymisation,text='Addition Valeur')
         self.additionValeur.place(x=50, y=180)
@@ -230,34 +230,36 @@ class MyWindow:
         self.checkAdditionValeur.place(x=20,y=174)
 
         self.entryAdditionIdentification = tk.Entry(self.cadreAnonymisation, state='normal')
-        self.entryAdditionIdentification.place(x=200, y=180, width=100, height=25)
+        self.entryAdditionIdentification.place(x=230, y=180, width=100, height=25)
         self.entryAdditionIdentification.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneAdditionIdentification =tk.Label(self.cadreAnonymisation,text='Identification')
-        self.colonneAdditionIdentification.place(x=200, y=166, width=100, height=12)
+        self.colonneAdditionIdentification.place(x=230, y=166, width=100, height=12)
 
         self.entryAdditionAssommer = tk.Entry(self.cadreAnonymisation, state='normal')
-        self.entryAdditionAssommer.place(x=320, y=180, width=100, height=25)
+        self.entryAdditionAssommer.place(x=350, y=180, width=100, height=25)
         self.entryAdditionAssommer.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneAdditionAssommer =tk.Label(self.cadreAnonymisation,text='A Sommer')
-        self.colonneAdditionAssommer.place(x=330, y=166, width=70, height=12)
+        self.colonneAdditionAssommer.place(x=360, y=166, width=70, height=12)
 
 
         #cadreFichier : Compilation et Jointure
         self.compilationFichier =tk.Label(self.cadreFichier,text='Compilation Fichier')
-        self.compilationFichier.place(x=50, y=20)
+        self.compilationFichier.place(x=50, y=30)
 
         self.varCompilation=tk.IntVar()
         self.checkButtonCompilationFichier= tk.Checkbutton(self.cadreFichier,variable= self.varCompilation, command = self.unlockCompilation, state='disabled')
-        self.checkButtonCompilationFichier.place(x=20,y=18)
+        self.checkButtonCompilationFichier.place(x=20,y=28)
 
         self.buttonCompil = tk.Button(self.cadreFichier,state='normal',text='Chargement',bd='4',relief='raised', command=lambda: self.load(1, False))
-        self.buttonCompil.place(x=200, y=20, width=100, height=25)
+        self.buttonCompil.place(x=200, y=30, width=100, height=25)
         self.buttonCompil.configure(state='disabled')
 
-        self.buttonResetCompil = tk.Button(self.cadreFichier,state='normal',text='Reset',bd='4',relief='raised', command = self.resetListCompil)
-        self.buttonResetCompil.place(x=200, y=60, width=60, height=25)
+        self.resetCompil=Image.open(self.dirPath+"filePathGenerator/images/resetCompilV2.JPG")
+        self.photoResetCompil=ImageTk.PhotoImage(self.resetCompil)
+        self.buttonResetCompil = tk.Button(self.cadreFichier,image=self.photoResetCompil,state='normal',text='Reset',bd='4',relief='raised', command = self.resetListCompil)
+        self.buttonResetCompil.place(x=325, y=35, width=20, height=20)
         self.buttonResetCompil.configure(state='disabled')
 
         self.listeCompilation = tk.Listbox(self.cadreFichier,state='normal')
@@ -303,7 +305,7 @@ class MyWindow:
         self.entryJointureFichier2.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.jointureFichier3 =tk.Label(self.cadreFichier,text='Colonne à ajouter')
-        self.jointureFichier3.place(x=350, y=160)
+        self.jointureFichier3.place(x=340, y=160)
 
         self.entryJointureFichier3 = tk.Entry(self.cadreFichier,state='normal')
         self.entryJointureFichier3.place(x=350, y=180, width=100, height=25)
@@ -393,7 +395,7 @@ class MyWindow:
         if self.entryAdditionIdentification['state'] == 'disabled':
             self.entryAdditionIdentification.configure(state = 'normal')
             self.entryAdditionAssommer.configure(state = 'normal')
-        elif self.entryAdditionIdentification['state'] == 'normal' or self.entryAddition['state'] == 'active':
+        elif self.entryAdditionIdentification['state'] == 'normal' or self.entryAdditionIdentification['state'] == 'active':
             self.entryAdditionIdentification.configure(state='disabled')
             self.entryAdditionAssommer.configure(state = 'disabled')
 
@@ -463,8 +465,10 @@ class MyWindow:
             self.colIndexApparition = [int(s) for s in entryApparitionString]
 
         if self.varAddition.get():
-            entryAdditionString = self.entryAddition.get().split(",")
-            self.colIndexAddition = [int(s) for s in entryAdditionString]
+            entryAdditionIdentificationString = self.entryAdditionIdentification.get().split(",")
+            self.colIndexAdditionIdentification = [int(s) for s in entryAdditionIdentificationString]
+            entryAdditionAssommerString = self.entryAdditionAssommer.get()
+            self.colIndexAdditionAssommer = int(entryAdditionAssommerString)
 
         if self.varCell.get():
             self.banList= self.entryCaracteresIndesirables.get().split(",")
@@ -513,7 +517,8 @@ class MyWindow:
         self.feedback('Initialisation des traitements..')
         operator = op.Operator(self, self.cleaner, self.filename, self.banList, self.dateFormat,
                             self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
-                    self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath, self.colIndexApparition, self.colIndexAddition)
+                            self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath, self.colIndexApparition,
+                            self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
         operator.setMod('clean')
         operator.start()
 
@@ -570,7 +575,8 @@ class MyWindow:
         self.colIndexDoublon= None
         self.colIndexAnonymisation= None
         self.colIndexApparition = None
-        self.colIndexAddition = None
+        self.colIndexAdditionIdentification = None
+        self.colIndexAdditionAssommer = None
         self.banList= None
         self.listeCheminCompil= None
         self.cheminJointure = None
@@ -630,7 +636,7 @@ class MyWindow:
         self.varCompilation.set(0)
         self.varAnonymisation.set(0)
         self.varApparition.set(0)
-        self.varApparition.set(0)
+        self.varAddition.set(0)
         self.varCategorisation.set(0)
 
 
@@ -648,7 +654,8 @@ class MyWindow:
         self.newPath = newName.name
         operator = op.Operator(self, self.cleaner, self.filename, self.banList, self.dateFormat,
                             self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
-                    self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath, self.colIndexApparition, self.colIndexAddition)
+                            self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath,
+                            self.colIndexApparition, self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
         operator.setMod('save')
         operator.start()
 

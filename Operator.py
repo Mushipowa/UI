@@ -5,7 +5,7 @@ class Operator(Thread):
 
     def __init__(self, ui, cleaner, filename, banList, dateFormat, colIndexDoublon,
                 colIndexAnonymisation, listeCheminCompil, cheminJointure, colComp1,
-                colComp2, colJoints, modeCateg, colIndexC, changes, newPath, colIndexApparition, colIndexAddition):
+                colComp2, colJoints, modeCateg, colIndexC, changes, newPath, colIndexApparition, colIndexAdditionIdentification, colIndexAdditionAssommer):
         Thread.__init__(self)
         self.ui = ui
         self.cleaner = cleaner
@@ -24,7 +24,8 @@ class Operator(Thread):
         self.changes = changes
         self.newPath = newPath
         self.colIndexApparition = colIndexApparition
-        self.colIndexAddition = colIndexAddition
+        self.colIndexAdditionIdentification = colIndexAdditionIdentification
+        self.colIndexAdditionAssommer = colIndexAdditionAssommer
         self.key = None
         self.daemon = True
 
@@ -56,6 +57,9 @@ class Operator(Thread):
             if self.colIndexApparition is not None:
                 self.ui.feedback('Calcul apparition des valeurs...')
                 self.cleaner.count(self.colIndexApparition)
+            if self.colIndexAdditionIdentification is not None:
+                self.ui.feedback('Addition des valeurs...')
+                self.cleaner.summ(self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
             self.cleaner.purify()
             self.callBackUI()
         if self.key == 'save':
