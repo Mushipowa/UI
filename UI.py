@@ -84,6 +84,8 @@ class MyWindow:
         self.cadre2 = tk.PanedWindow(self.frame, bg='#A7A1A2', width=800, height=770)
         self.cadre2.pack(side =tk.LEFT,padx =10)
         self.cadre2.pack_propagate(0)
+        self.cadre3 = tk.PanedWindow(self.cadre2, bg='#898283', width=200, height=100)
+        self.cadre3.place(x= 45, y =100)
 
         #Petits panels du Panel cadre1
         self.cadreFichier =tk.PanedWindow(self.cadre1,width= 475, height= 220, bd= 2, relief = 'sunken')
@@ -136,8 +138,16 @@ class MyWindow:
 
 
         #Zone d'affichage
-        self.text = tk.Text(self.cadre2,bg='white')
-        self.text.place(x=50,y=120, width =700, height=500)
+        self.text = tk.Text(self.cadre3,bg='white', width=100, height=32)
+        #scrollbar
+        self.scrollbar = tk.Scrollbar(self.cadre3,orient='vertical', command= self.text.yview)
+        self.text['yscrollcommand'] = self.scrollbar.set
+        self.scrollbar1 = tk.Scrollbar(self.cadre3, orient='horizontal', command= self.text.xview)
+        self.text['xscrollcommand'] = self.scrollbar1.set
+        self.scrollbar.grid(row=0, column=1, sticky = "ns")
+        self.scrollbar1.grid(row=1, sticky = "ew")
+        self.text.grid(row=0, column=0)
+
 
         #bouton Chargement
         self.buttonChargement = tk.Button(self.text, text='Importer un Fichier',bd='4',relief='raised',highlightcolor='black', command=lambda: self.load(0, False))
@@ -644,6 +654,7 @@ class MyWindow:
     #Afficher sur la zone
     def display(self):
             self.text.delete('1.0',tk.END)
+            #pd.set_option('expand_frame_repr', False)
             content = str(self.df.head()).replace('NaN', '   ')
             content = content.replace('NaT', '   ')
             self.text.insert('end', content + '\n')
@@ -651,7 +662,14 @@ class MyWindow:
     #Sauvegarder un fichier sous
     def saveas(self):
         newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('Excel', ('*.xlsx'))])
-        self.newPath = newName.name
+        if '.xlsx' in newName.name:
+            self.newPath = newName.name
+        elif '.csv' in newName.name or '.xls' in newName.name:
+            self.newPath = newName.name.replace('.csv','.xlsx')
+            self.newPath = newName.name.replace('.xls','.xlsx')
+        else:
+            self.newPath = newName.name+'.xlsx'
+        print(self.newPath)
         operator = op.Operator(self, self.cleaner, self.filename, self.banList, self.dateFormat,
                             self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
                             self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath,
