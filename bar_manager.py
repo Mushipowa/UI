@@ -1,5 +1,5 @@
 from threading import Thread
-import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_Cleaner as DC #data_Cleaner as DC
+import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_cleaner as DC #data_Cleaner as DC
 import time
 
 class BarManager(Thread):

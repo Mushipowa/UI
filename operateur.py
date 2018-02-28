@@ -1,7 +1,7 @@
 from threading import Thread
-import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_Cleaner as DC  #data_Cleaner as DC
+import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_cleaner as DC  #data_Cleaner as DC
 
-class Operator(Thread):
+class Operateur(Thread):
 
     def __init__(self, ui, cleaner, filename, banList, dateFormat, colIndexDoublon,
                 colIndexAnonymisation, listeCheminCompil, cheminJointure, colComp1,

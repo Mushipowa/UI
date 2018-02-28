@@ -13,11 +13,11 @@ from PIL import ImageTk, Image
 #import threading
 import pandas as pd
 import PFE_UI.UI.filePathGenerator.file as pg  #pathgen as pg
-import PFE_UI.UI.Operator as op
+import PFE_UI.UI.operateur as operateur
 import sys, os
 import time
-import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_Cleaner as DC #data_Cleaner as DC
-import PFE_UI.UI.BarManager as bm
+import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_cleaner as DC #data_Cleaner as DC
+import PFE_UI.UI.bar_manager as bm
 if getattr(sys, 'frozen', False) and getattr(sys, '_MEIPASS', None):
     # If the application is run as a bundle, the pyInstaller bootloader
     # extends the sys module by a flag frozen=True and sets the app
@@ -525,7 +525,7 @@ class MyWindow:
             pass
         self.getParam()
         self.feedback('Initialisation des traitements..')
-        operator = op.Operator(self, self.cleaner, self.filename, self.banList, self.dateFormat,
+        operator = operateur.Operateur(self, self.cleaner, self.filename, self.banList, self.dateFormat,
                             self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
                             self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath, self.colIndexApparition,
                             self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
@@ -664,13 +664,12 @@ class MyWindow:
         newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('Excel', ('*.xlsx'))])
         if '.xlsx' in newName.name:
             self.newPath = newName.name
-        elif '.csv' in newName.name or '.xls' in newName.name:
+        elif '.csv' in newName.name:
             self.newPath = newName.name.replace('.csv','.xlsx')
-            self.newPath = newName.name.replace('.xls','.xlsx')
         else:
             self.newPath = newName.name+'.xlsx'
         print(self.newPath)
-        operator = op.Operator(self, self.cleaner, self.filename, self.banList, self.dateFormat,
+        operator = operateur.Operateur(self, self.cleaner, self.filename, self.banList, self.dateFormat,
                             self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
                             self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath,
                             self.colIndexApparition, self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
