@@ -67,7 +67,7 @@ class Operator(Thread):
                 self.ui.feedback('Sauvegarde en cours...')
                 self.cleaner.saveWB(1, self.newPath)
             else:
-                self.ui.feed('Sauvegarde en cours...')
+                self.ui.feedback('Sauvegarde en cours...')
                 self.cleaner.saveWB(2, self.newPath)
             self.cleaner.openWB(1, self.newPath)
             self.callBackUI()
