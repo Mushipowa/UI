@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 try:
     # Python 2
     import Tkinter as tk
