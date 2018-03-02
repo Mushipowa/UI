@@ -86,7 +86,7 @@ class MyWindow:
         self.cadre6.pack(side=tk.TOP, fill='both')
         self.cadre5 = tk.PanedWindow(self.frame, bg='white', width=200, height=95)
         self.cadre5.pack(side=tk.BOTTOM, fill='both')
-        self.cadre1 = tk.PanedWindow(self.frame, bg='white', width=1420, height=460)
+        self.cadre1 = tk.PanedWindow(self.frame, bg='white', width=1380, height=460)
         self.cadre1.pack(side =tk.LEFT, fill='both')
         self.cadre1.pack_propagate(0)
 
@@ -94,7 +94,7 @@ class MyWindow:
 
 
         #Petits panels du Panel cadre1
-        self.cadreFichier =tk.PanedWindow(self.cadre1,width= 700, height= 290, bd= 2, relief = 'sunken')
+        self.cadreFichier =tk.PanedWindow(self.cadre1,width= 865, height= 290, bd= 2, relief = 'sunken')
         self.cadreFichier.place(x=10,y=160)
         self.cadreFichier.pack_propagate(0)
 
@@ -102,16 +102,16 @@ class MyWindow:
         self.cadreDate.place(x=10,y=5)
         self.cadreDate.pack_propagate(0)
 
-        self.cadreAddition =tk.PanedWindow(self.cadre1,width= 460, height= 190, bd= 2, relief = 'sunken')
-        self.cadreAddition.place(x=950,y=5)
+        self.cadreAddition =tk.PanedWindow(self.cadre1,width= 460, height= 200, bd= 2, relief = 'sunken')
+        self.cadreAddition.place(x=900,y=5)
         self.cadreAddition.pack_propagate(0)
 
-        self.cadreAnonymisation =tk.PanedWindow(self.cadre1,width= 465, height= 150, bd= 2, relief = 'sunken')
+        self.cadreAnonymisation =tk.PanedWindow(self.cadre1,width= 405, height= 150, bd= 2, relief = 'sunken')
         self.cadreAnonymisation.place(x=470,y=5)
         self.cadreAnonymisation.pack_propagate(0)
 
-        self.cadreCategorisation =tk.PanedWindow(self.cadre1,width= 525, height= 190, bd= 2, relief = 'sunken')
-        self.cadreCategorisation.place(x=800,y=265)
+        self.cadreCategorisation =tk.PanedWindow(self.cadre1,width= 460, height= 210, bd= 2, relief = 'sunken')
+        self.cadreCategorisation.place(x=900,y=240)
         self.cadreCategorisation.pack_propagate(0)
 
         #Titre panel paramètres
@@ -136,8 +136,8 @@ class MyWindow:
         self.photoPlay=ImageTk.PhotoImage(self.play)
         self.button = tk.Button(self.cadre5,image=self.photoPlay, bg='white',command=self.clean, state='disabled')
         self.button.place(x=690, y=23, width=50, height=50)
-        self.labelNettoyer = tk.Label(self.cadre5, text='Nettoyer', bg='white')
-        self.labelNettoyer.place(x=690,y=73)
+        self.labelNettoyer = tk.Label(self.cadre5, text='Lancer le(s) traitement(s)', bg='white')
+        self.labelNettoyer.place(x=630,y=73)
 
         self.pullBack=Image.open(self.dirPath+"filePathGenerator/images/retour.JPG")
         self.photoPullBack=ImageTk.PhotoImage(self.pullBack)
@@ -155,7 +155,7 @@ class MyWindow:
 
 
         #Zone d'affichage
-        self.text = tk.Text(self.cadre3,bg='white', width=201, height=5.5,bd =2, wrap='none')
+        self.text = tk.Text(self.cadre3,bg='white', width=196, height=5.5,bd =2, wrap='none')
         #scrollbar
         self.scrollbar = tk.Scrollbar(self.cadre3,orient='horizontal', command= self.text.xview)
         self.text['xscrollcommand'] = self.scrollbar.set
@@ -177,14 +177,14 @@ class MyWindow:
         self.checkButtonCellule.place(x=20,y=8)
 
         self.entryCaracteresIndesirables= tk.Entry(self.cadreDate,state='normal')
-        self.entryCaracteresIndesirables.place(x=100, y=40,  width=100, height=25)
+        self.entryCaracteresIndesirables.place(x=300, y=40,  width=140, height=25)
         self.entryCaracteresIndesirables.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.caracteresIndesirables= tk.Label(self.cadreDate, text='Valeurs')
-        self.caracteresIndesirables.place(x=50, y=45, width=50, height=12)
+        self.caracteresIndesirables.place(x=55, y=45, width=50, height=12)
 
         self.formatEntree =tk.Label(self.cadreDate,text='Format Entrée des dates ')
-        self.formatEntree.place(x=20, y=110, width=200, height=12)
+        self.formatEntree.place(x=35, y=110, width=200, height=12)
 
         self.cadreListDate = tk.PanedWindow(self.cadreDate)
         self.cadreListDate.place(x=390 ,y=85,width=50, height=52)
@@ -199,7 +199,7 @@ class MyWindow:
         self.scrollbarListDate = tk.Scrollbar(self.cadreListDate,orient='vertical', command= self.listDate.yview)
         self.listDate['yscrollcommand'] = self.scrollbarListDate.set
         self.scrollbarListDate.grid(row=0, column=1, sticky = None)
-        self.listDate.place(x=300, y=85)
+        self.listDate.place(x=303, y=85)
 
         self.formatDate =tk.Label(self.cadreDate,text='Formater des Dates', fg ='#B04334')
         self.formatDate.place(x=50, y=80)
@@ -217,7 +217,7 @@ class MyWindow:
         self.checkButtonAnonymisation.place(x=20,y=10)
 
         self.entryAnonymisation = tk.Entry(self.cadreAnonymisation,state='normal')
-        self.entryAnonymisation.place(x=250, y=45, width=100, height=25)
+        self.entryAnonymisation.place(x=250, y=45, width=140, height=25)
         self.entryAnonymisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneAnonymisation =tk.Label(self.cadreAnonymisation,text='N°Colonne(s) à anonymiser')
@@ -231,7 +231,7 @@ class MyWindow:
         self.checkButtonDoublon.place(x=20,y=78)
 
         self.entryDoublon= tk.Entry(self.cadreAnonymisation, state='normal')
-        self.entryDoublon.place(x=250, y=115, width=100, height=25)
+        self.entryDoublon.place(x=250, y=115, width=140, height=25)
         self.entryDoublon.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneDoublon =tk.Label(self.cadreAnonymisation,text='N°Colonne(s) à traiter')
@@ -246,7 +246,7 @@ class MyWindow:
         self.checkApparitionValeur.place(x=20,y=8)
 
         self.entryApparition= tk.Entry(self.cadreAddition, state='normal')
-        self.entryApparition.place(x=250, y=45, width=100, height=25)
+        self.entryApparition.place(x=250, y=45, width=140, height=25)
         self.entryApparition.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneApparition =tk.Label(self.cadreAddition,text='N°Colonne(s) à traiter')
@@ -260,14 +260,14 @@ class MyWindow:
         self.checkAdditionValeur.place(x=20,y=78)
 
         self.entryAdditionIdentification = tk.Entry(self.cadreAddition, state='normal')
-        self.entryAdditionIdentification.place(x=250, y=115, width=100, height=25)
+        self.entryAdditionIdentification.place(x=250, y=115, width=140, height=25)
         self.entryAdditionIdentification.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneAdditionIdentification =tk.Label(self.cadreAddition,text='N°Colonne à traiter')
         self.colonneAdditionIdentification.place(x=15, y=120, width=180, height=12)
 
         self.entryAdditionAssommer = tk.Entry(self.cadreAddition, state='normal')
-        self.entryAdditionAssommer.place(x=250, y=145, width=100, height=25)
+        self.entryAdditionAssommer.place(x=250, y=145, width=140, height=25)
         self.entryAdditionAssommer.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneAdditionAssommer =tk.Label(self.cadreAddition,text='N°Colonne à sommer')
@@ -293,7 +293,7 @@ class MyWindow:
         self.buttonResetCompil.configure(state='disabled')
 
         self.listeCompilation = tk.Listbox(self.cadreFichier,state='normal')
-        self.listeCompilation.place(x=200, y=64, width=480, height=40)
+        self.listeCompilation.place(x=200, y=64, width=550, height=40)
         self.listeCompilation.configure(state='disabled')
 
         self.fichiers =tk.Label(self.cadreFichier,text='Fichier(s) à compiler')
@@ -303,10 +303,10 @@ class MyWindow:
         self.jointureFichier.place(x=50, y=120)
 
         self.fichiersJointure =tk.Label(self.cadreFichier,text='Fichier à ajouter')
-        self.fichiersJointure.place(x=50, y=160, width=120, height=12)
+        self.fichiersJointure.place(x=45, y=160, width=120, height=12)
 
         self.listeJointure = tk.Listbox(self.cadreFichier,state='normal')
-        self.listeJointure.place(x=200, y=150, width=480, height=30)
+        self.listeJointure.place(x=200, y=150, width=550, height=30)
         self.listeJointure.configure(state='disabled')
 
         self.varJointure=tk.IntVar()
@@ -321,21 +321,21 @@ class MyWindow:
         self.jointureFichier1.place(x=50, y=195)
 
         self.entryJointureFichier1 = tk.Entry(self.cadreFichier, state='normal')
-        self.entryJointureFichier1.place(x=300, y=195, width=100, height=25)
+        self.entryJointureFichier1.place(x=300, y=195, width=140, height=25)
         self.entryJointureFichier1.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.jointureFichier2 =tk.Label(self.cadreFichier,text='Fichier 2 - N° Colonne à matcher')
         self.jointureFichier2.place(x=50, y=225)
 
         self.entryJointureFichier2 = tk.Entry(self.cadreFichier,state='normal')
-        self.entryJointureFichier2.place(x=300, y=225, width=100, height=25)
+        self.entryJointureFichier2.place(x=300, y=225, width=140, height=25)
         self.entryJointureFichier2.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.jointureFichier3 =tk.Label(self.cadreFichier,text='Fichier 2 - N° Colonne(s) à ajouter')
         self.jointureFichier3.place(x=50, y=255)
 
         self.entryJointureFichier3 = tk.Entry(self.cadreFichier,state='normal')
-        self.entryJointureFichier3.place(x=300, y=255, width=100, height=25)
+        self.entryJointureFichier3.place(x=300, y=255, width=140, height=25)
         self.entryJointureFichier3.configure(state='disabled',disabledbackground='#E8E8E8')
 
         #cadreCategorisation : Categorisation
@@ -347,31 +347,31 @@ class MyWindow:
         self.checkButtonCategorisation.place(x=20,y=8)
 
         self.entryColonneCategorisation = tk.Entry(self.cadreCategorisation,state='normal')
-        self.entryColonneCategorisation.place(x=200, y=85, width=100, height=25)
+        self.entryColonneCategorisation.place(x=250, y=95, width=140, height=25)
         self.entryColonneCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
         self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='N°Colonne à catégoriser')
-        self.colonneCategorisation.place(x=0, y=90, width=200, height=12)
+        self.colonneCategorisation.place(x=30, y=100, width=200, height=12)
 
         self.entryEntreeCategorisation = tk.Entry(self.cadreCategorisation,state='normal')
-        self.entryEntreeCategorisation.place(x=200, y=115, width=100, height=25)
+        self.entryEntreeCategorisation.place(x=250, y=125, width=140, height=25)
         self.entryEntreeCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
-        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeurs Entrée')
-        self.colonneCategorisation.place(x=20, y=120, width=100, height=12)
+        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeur(s) Entrée')
+        self.colonneCategorisation.place(x=50, y=130, width=110, height=12)
 
         self.entrySortieCategorisation = tk.Entry(self.cadreCategorisation,state='normal')
-        self.entrySortieCategorisation.place(x=200, y=145, width=100, height=25)
+        self.entrySortieCategorisation.place(x=250, y=155, width=140, height=25)
         self.entrySortieCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
-        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeurs Sortie')
-        self.colonneCategorisation.place(x=20, y=150, width=100, height=12)
+        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeur(s) Sortie')
+        self.colonneCategorisation.place(x=50, y=160, width=110, height=12)
 
         self.colonneTypeDonnees =tk.Label(self.cadreCategorisation,text='Type de données')
-        self.colonneTypeDonnees.place(x=10, y=45, width=140, height=12)
+        self.colonneTypeDonnees.place(x=35, y=55, width=140, height=12)
 
         self.listModeCategorisation = tk.Listbox(self.cadreCategorisation, state='normal')
-        self.listModeCategorisation.place(x=250, y=35, width=140, height=40)
+        self.listModeCategorisation.place(x=250, y=45, width=140, height=40)
         self.listModeCategorisation.insert(tk.END,"Numérique")
         self.listModeCategorisation.insert(tk.END,"Chaine de caractères")
         self.listModeCategorisation.configure(state='disabled',exportselection=False)
