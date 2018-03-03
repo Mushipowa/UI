@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from threading import Thread
 import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_cleaner as DC  #data_Cleaner as DC
 
