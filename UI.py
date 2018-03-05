@@ -73,9 +73,12 @@ class MyWindow:
 
         self.menufichier=tk.Menu(self.menubar,tearoff=0)
         self.menubar.add_cascade(label="Fichier",menu=self.menufichier)
-        self.menufichier.add_command(label="Nouveau Fichier",command=lambda: self.load(0, False))
+        self.menufichier.add_command(label="Nouveau fichier",command=lambda: self.load(0, False))
         self.menufichier.add_separator()
         self.menufichier.add_command(label="Quitter",command=self.parent.destroy)
+
+        self.menuhistory=tk.Menu(self.menubar,tearoff=1)
+        self.menubar.add_cascade(label="Historique", menu=self.menuhistory)
 
 
         #Deux grands Panels
@@ -116,7 +119,7 @@ class MyWindow:
         self.cadreCategorisation.pack_propagate(0)
 
         #Titre panel paramètres
-        self.labelTitreCadre1 = tk.Label(self.cadre6,text='Traitement et Paramètres',justify='center',width=71, bg='#5E5455',fg='white')
+        self.labelTitreCadre1 = tk.Label(self.cadre6,text='Traitements et Paramètres',justify='center',width=71, bg='#5E5455',fg='white')
         self.labelTitreCadre1.place(x=390, y=0)
 
         #Image Doshas
@@ -125,7 +128,7 @@ class MyWindow:
         self.labelDoshas=tk.Label(self.cadre4,image=self.photo, bg='white')
         self.labelDoshas.place(x=625, y=0, width=150 ,height=52)
 
-        self.nomFichierLabel = tk.Label(self.cadre4, text='Fichier Principal: ')
+        self.nomFichierLabel = tk.Label(self.cadre4, text='Fichier principal: ')
         self.nomFichierLabel.place(x=0 ,y=50)
 
         self.varNomFichier = tk.StringVar()
@@ -170,7 +173,7 @@ class MyWindow:
 
 
         #cadreDate : Date,nombre,cellules vides
-        self.banChar =tk.Label(self.cadreDate,text='Supprimer des Caractères Indésirables', fg ='#B04334')
+        self.banChar =tk.Label(self.cadreDate,text='Supprimer des caractères indésirables', fg ='#B04334')
         self.banChar.place(x=50, y=10)
 
         self.varCell=tk.IntVar()
@@ -184,7 +187,7 @@ class MyWindow:
         self.caracteresIndesirables= tk.Label(self.cadreDate, text='Valeurs')
         self.caracteresIndesirables.place(x=55, y=45, width=50, height=12)
 
-        self.formatEntree =tk.Label(self.cadreDate,text='Format Entrée des dates ')
+        self.formatEntree =tk.Label(self.cadreDate,text='Format entrée des dates ')
         self.formatEntree.place(x=35, y=110, width=200, height=12)
 
         self.cadreListDate = tk.PanedWindow(self.cadreDate)
@@ -202,7 +205,7 @@ class MyWindow:
         self.scrollbarListDate.grid(row=0, column=1, sticky = None)
         self.listDate.place(x=303, y=85)
 
-        self.formatDate =tk.Label(self.cadreDate,text='Formater des Dates', fg ='#B04334')
+        self.formatDate =tk.Label(self.cadreDate,text='Formater des dates', fg ='#B04334')
         self.formatDate.place(x=50, y=80)
 
         self.varDate=tk.IntVar()
@@ -224,7 +227,7 @@ class MyWindow:
         self.colonneAnonymisation =tk.Label(self.cadreAnonymisation,text='N°Colonne(s) à anonymiser')
         self.colonneAnonymisation.place(x=40, y=50, width=180, height=12)
 
-        self.identificationDoublon =tk.Label(self.cadreAnonymisation,text='Identifier des Doublons', fg ='#B04334')
+        self.identificationDoublon =tk.Label(self.cadreAnonymisation,text='Identifier des doublons', fg ='#B04334')
         self.identificationDoublon.place(x=50, y=80)
 
         self.varDoublon=tk.IntVar()
@@ -276,14 +279,14 @@ class MyWindow:
 
 
         #cadreFichier : Compilation et Jointure
-        self.compilationFichier =tk.Label(self.cadreFichier,text='Compiler des Fichiers', fg ='#B04334')
+        self.compilationFichier =tk.Label(self.cadreFichier,text='Compiler des fichiers', fg ='#B04334')
         self.compilationFichier.place(x=50, y=30)
 
         self.varCompilation=tk.IntVar()
         self.checkButtonCompilationFichier= tk.Checkbutton(self.cadreFichier,variable= self.varCompilation, command = self.unlockCompilation, state='disabled')
         self.checkButtonCompilationFichier.place(x=20,y=28)
 
-        self.buttonCompil = tk.Button(self.cadreFichier,state='normal',text='Importer un Fichier',bd='4',relief='raised', command=lambda: self.load(1, False))
+        self.buttonCompil = tk.Button(self.cadreFichier,state='normal',text='Importer un fichier',bd='4',relief='raised', command=lambda: self.load(1, False))
         self.buttonCompil.place(x=300, y=30, width=140, height=25)
         self.buttonCompil.configure(state='disabled')
 
@@ -293,7 +296,13 @@ class MyWindow:
         self.buttonResetCompil.place(x=440, y=35, width=20, height=20)
         self.buttonResetCompil.configure(state='disabled')
 
+
+        self.cadreListCompilation = tk.PanedWindow(self.cadreFichier)
+        self.cadreListCompilation.place(x=750 ,y=64,width=50, height=40)
         self.listeCompilation = tk.Listbox(self.cadreFichier,state='normal')
+        self.scrollbarListCompilation = tk.Scrollbar(self.cadreListCompilation,orient='vertical', command= self.listeCompilation.yview)
+        self.listeCompilation['yscrollcommand'] = self.scrollbarListCompilation.set
+        self.scrollbarListCompilation.grid(row=0, column=1, sticky = None)
         self.listeCompilation.place(x=200, y=64, width=550, height=40)
         self.listeCompilation.configure(state='disabled')
 
@@ -314,7 +323,7 @@ class MyWindow:
         self.checkButtonJointureFichier= tk.Checkbutton(self.cadreFichier,variable= self.varJointure, command=self.unlockJointure, state='disabled')
         self.checkButtonJointureFichier.place(x=20,y=118)
 
-        self.buttonJointure = tk.Button(self.cadreFichier, text='Importer un Fichier',bd='4',relief='raised', command=lambda: self.load(2, False))
+        self.buttonJointure = tk.Button(self.cadreFichier, text='Importer un fichier',bd='4',relief='raised', command=lambda: self.load(2, False))
         self.buttonJointure.place(x=300, y=120, width=140, height=25)
         self.buttonJointure.configure(state='disabled')
 
@@ -358,14 +367,14 @@ class MyWindow:
         self.entryEntreeCategorisation.place(x=250, y=125, width=140, height=25)
         self.entryEntreeCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
-        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeur(s) Entrée')
+        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeur(s) entrée')
         self.colonneCategorisation.place(x=50, y=130, width=110, height=12)
 
         self.entrySortieCategorisation = tk.Entry(self.cadreCategorisation,state='normal')
         self.entrySortieCategorisation.place(x=250, y=155, width=140, height=25)
         self.entrySortieCategorisation.configure(state='disabled',disabledbackground='#E8E8E8')
 
-        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeur(s) Sortie')
+        self.colonneCategorisation =tk.Label(self.cadreCategorisation,text='Valeur(s) sortie')
         self.colonneCategorisation.place(x=50, y=160, width=110, height=12)
 
         self.colonneTypeDonnees =tk.Label(self.cadreCategorisation,text='Type de données')
@@ -589,6 +598,8 @@ class MyWindow:
                     self.buttonChargement.place_forget()
                     self.enableCheckButtons()
                     self.display()
+                    self.menuhistory.add_command(label=name,command=lambda: self.load(0, False))
+                    self.menuhistory.add_separator()
                 if keyLoad == 1:
                     self.listeCompilation.insert(tk.END, name)
                 if keyLoad == 2:
