@@ -680,6 +680,17 @@ class MyWindow:
         self.listDate.configure(state='disabled')
         self.listModeCategorisation.configure(state='disabled')
 
+        self.formatDate.configure(fg='#B04334')
+        self.banChar.configure(fg='#B04334')
+        self.anonymisation.configure(fg='#B04334')
+        self.identificationDoublon.configure(fg='#B04334')
+        self.apparitionValeur.configure(fg='#B04334')
+        self.additionValeur.configure(fg='#B04334')
+        self.categorisation.configure(fg='#B04334')
+        self.compilationFichier.configure(fg='#B04334')
+        self.jointureFichier.configure(fg='#B04334')
+
+
         self.varDate.set(0)
         self.varCell.set(0)
         self.varDoublon.set(0)
