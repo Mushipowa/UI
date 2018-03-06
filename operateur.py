@@ -40,6 +40,8 @@ class Operateur(Thread):
             if self.dateFormat is not None:
                 self.ui.feedback('Formattage des dates...')
                 self.cleaner.changeDate(self.dateFormat)
+            self.ui.feedback('Formattage des nombres...')
+            self.cleaner.formatNumbers()
             if self.colIndexDoublon is not None:
                 self.ui.feedback('Identification des doublons...')
                 self.cleaner.doublons(self.colIndexDoublon)
@@ -82,5 +84,5 @@ class Operateur(Thread):
             self.ui.resetParam()
             self.ui.resetUI()
         if self.key == 'save':
-            self.ui.load(None, True, self.newPath)
+            self.ui.load(None, 'history_CLEAN', self.newPath)
             self.ui.newPath = None
