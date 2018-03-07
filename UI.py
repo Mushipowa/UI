@@ -61,6 +61,7 @@ class MyWindow:
         self.changes = {}
         self.bytes=0
         self.maxbytes = 100
+        self.history = []
 
         self.frame = tk.Frame(self.parent, bg='white', width=1200, height=800)
         self.frame.grid()
@@ -577,17 +578,18 @@ class MyWindow:
 
     #Charger un fichier
     def load(self, keyLoad, update, *args):
+        # -*- coding: UTF-8 -*-
         if update == False:
             name = askopenfilename(filetypes=[('Excel', ('*.xls', '*.xlsx'))])
             if name:
                 if keyLoad == 0:
-                    print('a')
                     if name.endswith('.csv'):
                         self.feedback('Ouverture du fichier...')
                         self.df = pd.read_csv(name)
                     else:
                         self.feedback('Ouverture du fichier...')
                         self.df = pd.read_excel(name)
+                    self.history.append(name)
                     self.filename = name
                     self.varNomFichier.set(self.filename)
                     self.buttonChargement.place_forget()
@@ -601,60 +603,54 @@ class MyWindow:
                     self.listeJointure.delete(0, tk.END)
                     self.listeJointure.insert(tk.END, name)
         if update == 'history_MENU':
-            print('b')
             self.feedback('Chargement du fichier...')
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
                 self.filename = args[0]
-                self.varNomFichier.set(self.filename)
                 self.menuhistory.delete(args[0])
                 self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', self.filename)))
+                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
                 self.menuhistory.add_separator()
             else:
                 self.df = pd.read_excel(args[0])
                 self.filename = args[0]
-                self.varNomFichier.set(self.filename)
                 self.menuhistory.delete(args[0])
                 self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', self.filename)))
+                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
                 self.menuhistory.add_separator()
             self.display()
+            self.varNomFichier.set(self.filename)
         if update == 'history_CLEAN':
-            print('c')
             self.feedback('Chargement du fichier...')
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
                 self.filename = args[0]
-                self.varNomFichier.set(self.filename)
-                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', self.filename)))
+                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
                 self.menuhistory.add_separator()
             else:
                 self.df = pd.read_excel(args[0])
                 self.filename = args[0]
-                self.varNomFichier.set(self.filename)
-                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', self.filename)))
+                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
                 self.menuhistory.add_separator()
             self.display()
+            self.varNomFichier.set(self.filename)
         if update == 'from_MENU_NOCLEAN':
-            print('d')
             self.feedback('Chargement du fichier...')
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
                 self.filename = args[0]
-                self.varNomFichier.set(self.filename)
                 self.menuhistory.delete(args[0])
                 self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', self.filename))
+                self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', args[0]))
                 self.menuhistory.add_separator()
             else:
                 self.df = pd.read_excel(args[0])
                 self.filename = args[0]
-                self.varNomFichier.set(self.filename)
                 self.menuhistory.delete(args[0])
                 self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', self.filename))
+                self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', args[0]))
             self.display()
+            self.varNomFichier.set(self.filename)
 
     def enableCheckButtons(self):
         self.checkButtonCellule.configure(state='normal')
