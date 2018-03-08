@@ -1,4 +1,7 @@
 # -*- coding: UTF-8 -*-
+__author__      = "Masson Charles, Pelloux Maxence"
+__copyright__   = "Copyright 2018, Masson Charles & Pelloux Maxence"
+
 from threading import Thread
 import PFE_MondoClean.MondoClean.data_Cleaner_Module.data_cleaner as DC  #data_Cleaner as DC
 
