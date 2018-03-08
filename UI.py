@@ -1,4 +1,8 @@
 # -*- coding: UTF-8 -*-
+__author__      = "Masson Charles, Pelloux Maxence"
+__copyright__   = "Copyright 2018, Masson Charles & Pelloux Maxence"
+
+
 try:
     # Python 2
     import Tkinter as tk
