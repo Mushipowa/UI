@@ -80,9 +80,9 @@ class Operateur(Thread):
 
     def callBackUI(self):
         if self.key == 'clean':
+            self.ui.resetUI()
             self.ui.saveas()
             self.ui.resetParam()
-            self.ui.resetUI()
         if self.key == 'save':
             self.ui.load(None, 'history_CLEAN', self.newPath)
             self.ui.newPath = None

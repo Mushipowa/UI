@@ -539,23 +539,19 @@ class MyWindow:
 
         if self.varCategorisation.get():
             self.colIndexC = int(self.entryColonneCategorisation.get())
-            entryCategorisationKeyString = self.entrySortieCategorisation.get().split(",")
-            entryCategorisationValueString = self.entryEntreeCategorisation.get().split(",")
+            entryCategorisationKeyString = self.entryEntreeCategorisation.get().split(",")
+            entryCategorisationValueString = self.entrySortieCategorisation.get().split(",")
             if self.listModeCategorisation.curselection()[0]==0:
                 self.modeCateg='numerical'
             if self.listModeCategorisation.curselection()[0]==1:
                 self.modeCateg='substitute'
             if self.modeCateg == 'substitute':
-                for i in range(len(entryCategorisationKeyString)):
+                for i in range(len(entryCategorisationValueString)):
                     self.changes.update({entryCategorisationKeyString[i]:entryCategorisationValueString[i]})
             else:
-                for i in range(len(entryCategorisationKeyString)):
-                    self.changes.update({entryCategorisationKeyString[i]:entryCategorisationValueString[i].split(":")})
-
-
-    #Sauvegarder avec menu
-    def save(self):
-        self.cleaner.saveWB()
+                for i in range(len(entryCategorisationValueString)):
+                    self.changes.update({tuple(entryCategorisationKeyString[i].split(":")):entryCategorisationValueString[i]})
+            print(self.changes)
 
     #Nettoyer
     def clean(self):
@@ -593,7 +589,7 @@ class MyWindow:
                     self.filename = name
                     self.varNomFichier.set(self.filename)
                     self.buttonChargement.place_forget()
-                    self.enableCheckButtons()
+                    self.enableCheckButtons('unlock')
                     self.display()
                     self.menuhistory.add_command(label=name,command=lambda: self.load(None, 'from_MENU_NOCLEAN', name))
                     self.menuhistory.add_separator()
@@ -606,65 +602,75 @@ class MyWindow:
             self.feedback('Chargement du fichier...')
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
-                self.filename = args[0]
-                self.menuhistory.delete(args[0])
-                self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
-                self.menuhistory.add_separator()
             else:
                 self.df = pd.read_excel(args[0])
-                self.filename = args[0]
-                self.menuhistory.delete(args[0])
-                self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
-                self.menuhistory.add_separator()
+            self.filename = args[0]
+            self.menuhistory.delete(args[0])
+            self.menuhistory.add_separator()
+            self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
+            self.menuhistory.add_separator()
             self.display()
             self.varNomFichier.set(self.filename)
         if update == 'history_CLEAN':
             self.feedback('Chargement du fichier...')
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
-                self.filename = args[0]
-                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
-                self.menuhistory.add_separator()
             else:
                 self.df = pd.read_excel(args[0])
-                self.filename = args[0]
+            self.display()
+            self.varNomFichier.set(args[0])
+            self.filename = args[0]
+            try:
+                self.menuhistory.delete(args[0])
+                self.menuhistory.add_separator()
+                self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'from_MENU_NOCLEAN', args[0]))
+                self.menuhistory.add_separator()
+            except:
                 self.menuhistory.add_command(label=args[0],command=lambda: self.load(None, 'history_MENU', self.cleaner.timeMachine('pullBack@', args[0])))
                 self.menuhistory.add_separator()
-            self.display()
-            self.varNomFichier.set(self.filename)
         if update == 'from_MENU_NOCLEAN':
             self.feedback('Chargement du fichier...')
             if args[0].endswith('.csv'):
                 self.df = pd.read_csv(args[0])
-                self.filename = args[0]
-                self.menuhistory.delete(args[0])
-                self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', args[0]))
-                self.menuhistory.add_separator()
             else:
                 self.df = pd.read_excel(args[0])
-                self.filename = args[0]
-                self.menuhistory.delete(args[0])
-                self.menuhistory.add_separator()
-                self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', args[0]))
+            self.filename = args[0]
+            self.menuhistory.delete(args[0])
+            self.menuhistory.add_separator()
+            self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', args[0]))
             self.display()
             self.varNomFichier.set(self.filename)
 
-    def enableCheckButtons(self):
-        self.checkButtonCellule.configure(state='normal')
-        self.checkButtonDate.configure(state='normal')
-        self.checkButtonDoublon.configure(state='normal')
-        self.checkButtonAnonymisation.configure(state='normal')
-        self.checkButtonCategorisation.configure(state='normal')
-        self.checkButtonCompilationFichier.configure(state='normal')
-        self.checkButtonJointureFichier.configure(state='normal')
-        self.checkAdditionValeur.configure(state='normal')
-        self.checkApparitionValeur.configure(state='normal')
-        self.button.configure(state='normal')
-        self.buttonReset.configure(state='normal')
-        self.buttonPullBack.configure(state='normal')
+    def enableCheckButtons(self, key):
+        if key == 'unlock':
+            self.checkButtonCellule.configure(state='normal')
+            self.checkButtonDate.configure(state='normal')
+            self.checkButtonDoublon.configure(state='normal')
+            self.checkButtonAnonymisation.configure(state='normal')
+            self.checkButtonCategorisation.configure(state='normal')
+            self.checkButtonCompilationFichier.configure(state='normal')
+            self.checkButtonJointureFichier.configure(state='normal')
+            self.checkAdditionValeur.configure(state='normal')
+            self.checkApparitionValeur.configure(state='normal')
+            self.button.configure(state='normal')
+            self.buttonReset.configure(state='normal')
+            self.buttonPullBack.configure(state='normal')
+        else:
+            self.checkButtonAnonymisation.configure(state='disabled')
+            self.checkButtonCategorisation.configure(state='disabled')
+            self.checkButtonCellule.configure(state='disabled')
+            self.checkButtonCompilationFichier.configure(state='disabled')
+            self.checkButtonDate.configure(state='disabled')
+            self.checkButtonDoublon.configure(state='disabled')
+            self.checkButtonJointureFichier.configure(state='disabled')
+            self.checkButton.configure(state='disabled')
+            self.checkButtonAnonymisation.configure(state='disabled')
+            self.checkAdditionValeur.configure(state='disabled')
+            self.checkApparitionValeur.configure(state='disabled')
+            self.button.configure(state='disabled')
+            self.buttonReset.configure(state='disabled')
+            self.buttonPullBack.configure(state='disabled')
+
     #Reset Paramètres
     def resetParam(self):
         self.dateFormat= None
@@ -735,6 +741,7 @@ class MyWindow:
         self.compilationFichier.configure(fg='#B04334')
         self.jointureFichier.configure(fg='#B04334')
 
+        self.varNomFichier.set('')
         self.varDate.set(0)
         self.varCell.set(0)
         self.varDoublon.set(0)
@@ -744,35 +751,36 @@ class MyWindow:
         self.varApparition.set(0)
         self.varAddition.set(0)
         self.varCategorisation.set(0)
-        self.varNomFichier.set('')
-
 
 
     #Afficher sur la zone
     def display(self):
             self.text.delete('1.0',tk.END)
             pd.set_option('expand_frame_repr', False)
-            content = str(self.df.head()).replace('NaN', '   ')
+            content = str(self.df.to_string(index=False)).replace('NaN', '   ')
             content = content.replace('NaT', '   ')
             content = content.replace('None', '    ')
             self.text.insert('end', content )
 
     #Sauvegarder un fichier sous
     def saveas(self):
-        newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('Excel', ('*.xlsx'))])
-        if '.xlsx' in newName.name:
-            self.newPath = newName.name
-        elif '.csv' in newName.name:
-            self.newPath = newName.name.replace('.csv','.xlsx')
-        else:
-            self.newPath = newName.name+'.xlsx'
-        print(self.newPath)
-        operator = operateur.Operateur(self, self.cleaner, self.filename, self.banList, self.dateFormat,
-                            self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
-                            self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath,
-                            self.colIndexApparition, self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
-        operator.setMod('save')
-        operator.start()
+        try:
+            newName=tk.filedialog.asksaveasfile(title="Enregistrer sous.. un fichier", filetypes=[('Excel', ('*.xlsx'))])
+            if '.xlsx' in newName.name:
+                self.newPath = newName.name
+            elif '.csv' in newName.name:
+                self.newPath = newName.name.replace('.csv','.xlsx')
+            else:
+                self.newPath = newName.name+'.xlsx'
+            operator = operateur.Operateur(self, self.cleaner, self.filename, self.banList, self.dateFormat,
+                                self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
+                                self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath,
+                                self.colIndexApparition, self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
+            operator.setMod('save')
+            operator.start()
+        except:
+            self.resetUI()
+            self.load(None, 'history_CLEAN', self.filename)
 
     #Effacer l'affichage
     def clear(self):
