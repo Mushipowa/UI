@@ -494,68 +494,72 @@ class MyWindow:
 
     #Parametres
     def getParam(self):
-        if self.varDate.get():
-            if self.listDate.curselection()[0]==0:
-                self.dateFormat='%Y%m%d'
-            if self.listDate.curselection()[0]==1:
-                self.dateFormat='%Y%d%m'
-            if self.listDate.curselection()[0]==2:
-                self.dateFormat='%m%d%Y'
-            if self.listDate.curselection()[0]==3:
-                self.dateFormat='%m%Y%d'
-            if self.listDate.curselection()[0]==4:
-                self.dateFormat='%d%m%Y'
-            if self.listDate.curselection()[0]==5:
-                self.dateFormat='%d%Y%m'
+        try:
+            if self.varDate.get():
+                if self.listDate.curselection()[0]==0:
+                    self.dateFormat='%Y%m%d'
+                if self.listDate.curselection()[0]==1:
+                    self.dateFormat='%Y%d%m'
+                if self.listDate.curselection()[0]==2:
+                    self.dateFormat='%m%d%Y'
+                if self.listDate.curselection()[0]==3:
+                    self.dateFormat='%m%Y%d'
+                if self.listDate.curselection()[0]==4:
+                    self.dateFormat='%d%m%Y'
+                if self.listDate.curselection()[0]==5:
+                    self.dateFormat='%d%Y%m'
 
-        if self.varDoublon.get():
-            entryDoublonString = self.entryDoublon.get().split(",")
-            self.colIndexDoublon = [int(s) for s in entryDoublonString]
+            if self.varDoublon.get():
+                entryDoublonString = self.entryDoublon.get().split(",")
+                self.colIndexDoublon = [int(s) for s in entryDoublonString]
 
-        if self.varAnonymisation.get():
-            entryAnonymisationString= self.entryAnonymisation.get().split(",")
-            self.colIndexAnonymisation= [int(s) for s in entryAnonymisationString]
+            if self.varAnonymisation.get():
+                entryAnonymisationString= self.entryAnonymisation.get().split(",")
+                self.colIndexAnonymisation= [int(s) for s in entryAnonymisationString]
 
-        if self.varApparition.get():
-            entryApparitionString = self.entryApparition.get().split(",")
-            self.colIndexApparition = [int(s) for s in entryApparitionString]
+            if self.varApparition.get():
+                entryApparitionString = self.entryApparition.get().split(",")
+                self.colIndexApparition = [int(s) for s in entryApparitionString]
 
-        if self.varAddition.get():
-            entryAdditionIdentificationString = self.entryAdditionIdentification.get().split(",")
-            self.colIndexAdditionIdentification = [int(s) for s in entryAdditionIdentificationString]
-            entryAdditionAssommerString = self.entryAdditionAssommer.get()
-            self.colIndexAdditionAssommer = int(entryAdditionAssommerString)
+            if self.varAddition.get():
+                entryAdditionIdentificationString = self.entryAdditionIdentification.get().split(",")
+                self.colIndexAdditionIdentification = [int(s) for s in entryAdditionIdentificationString]
+                entryAdditionAssommerString = self.entryAdditionAssommer.get()
+                self.colIndexAdditionAssommer = int(entryAdditionAssommerString)
 
-        if self.varCell.get():
-            self.banList= self.entryCaracteresIndesirables.get().split(",")
+            if self.varCell.get():
+                self.banList= self.entryCaracteresIndesirables.get().split(",")
 
-        if self.varCompilation.get():
-            self.listeCheminCompil = []
-            for i in range(self.listeCompilation.size()):
-                self.listeCheminCompil.append(self.listeCompilation.get(i))
+            if self.varCompilation.get():
+                self.listeCheminCompil = []
+                for i in range(self.listeCompilation.size()):
+                    self.listeCheminCompil.append(self.listeCompilation.get(i))
 
-        if self.varJointure.get():
-            self.cheminJointure = self.listeJointure.get(0)
-            self.colComp1 = int(self.entryJointureFichier1.get())
-            self.colComp2 = int(self.entryJointureFichier2.get())
-            entryJoinFichier3 = self.entryJointureFichier3.get().split(",")
-            self.colJoints = [int(s) for s in entryJoinFichier3]
+            if self.varJointure.get():
+                self.cheminJointure = self.listeJointure.get(0)
+                self.colComp1 = int(self.entryJointureFichier1.get())
+                self.colComp2 = int(self.entryJointureFichier2.get())
+                entryJoinFichier3 = self.entryJointureFichier3.get().split(",")
+                self.colJoints = [int(s) for s in entryJoinFichier3]
 
-        if self.varCategorisation.get():
-            self.colIndexC = int(self.entryColonneCategorisation.get())
-            entryCategorisationKeyString = self.entryEntreeCategorisation.get().split(",")
-            entryCategorisationValueString = self.entrySortieCategorisation.get().split(",")
-            if self.listModeCategorisation.curselection()[0]==0:
-                self.modeCateg='numerical'
-            if self.listModeCategorisation.curselection()[0]==1:
-                self.modeCateg='substitute'
-            if self.modeCateg == 'substitute':
-                for i in range(len(entryCategorisationValueString)):
-                    self.changes.update({entryCategorisationKeyString[i]:entryCategorisationValueString[i]})
-            else:
-                for i in range(len(entryCategorisationValueString)):
-                    self.changes.update({tuple(entryCategorisationKeyString[i].split(":")):entryCategorisationValueString[i]})
-            print(self.changes)
+            if self.varCategorisation.get():
+                self.colIndexC = int(self.entryColonneCategorisation.get())
+                entryCategorisationKeyString = self.entryEntreeCategorisation.get().split(",")
+                entryCategorisationValueString = self.entrySortieCategorisation.get().split(",")
+                if self.listModeCategorisation.curselection()[0]==0:
+                    self.modeCateg='numerical'
+                if self.listModeCategorisation.curselection()[0]==1:
+                    self.modeCateg='substitute'
+                if self.modeCateg == 'substitute':
+                    for i in range(len(entryCategorisationValueString)):
+                        self.changes.update({entryCategorisationKeyString[i]:entryCategorisationValueString[i]})
+                else:
+                    for i in range(len(entryCategorisationValueString)):
+                        self.changes.update({tuple(entryCategorisationKeyString[i].split(":")):entryCategorisationValueString[i]})
+        except ValueError:
+            self.feedback("Error while processing column indexes, please make sure to provide an integer index.")
+        except:
+            self.feedback("Unexpected error: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     #Nettoyer
     def clean(self):
@@ -566,7 +570,6 @@ class MyWindow:
         else:
             pass
         self.getParam()
-        self.feedback('Initialisation des traitements..')
         operator = operateur.Operateur(self, self.cleaner, self.filename, self.banList, self.dateFormat,
                             self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
                             self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath, self.colIndexApparition,
@@ -795,8 +798,7 @@ class MyWindow:
         self.parent.update_idletasks()
 
     def feedback(self, text):
-        self.text.delete('1.0',tk.END)
-        self.text.insert('end', text)
+        self.text.insert('end', text + '\n')
 
     def resetListCompil(self):
         self.listeCompilation.delete(0, tk.END)

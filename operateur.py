@@ -35,50 +35,52 @@ class Operateur(Thread):
 
     def run(self):
         if self.key == 'clean':
-            self.cleaner.openWB(1, self.filename)
+            self.ui.clear()
+            self.ui.feedback('Initialisation des traitements..')
+            self.ui.feedback(self.cleaner.openWB(1, self.filename))
             if self.listeCheminCompil is not None:
                 self.ui.feedback('Compilation...')
-                self.cleaner.aggreg(self.listeCheminCompil)
+                self.ui.feedback(self.cleaner.aggreg(self.listeCheminCompil))
             if self.banList is not None:
-                self.cleaner.param(self.banList)
+                self.ui.feedback(self.cleaner.param(self.banList))
             self.ui.feedback('Purification...')
-            self.cleaner.purify()
+            self.ui.feedback(self.cleaner.purify())
             if self.dateFormat is not None:
                 self.ui.feedback('Formattage des dates...')
-                self.cleaner.changeDate(self.dateFormat)
+                self.ui.feedback(self.cleaner.changeDate(self.dateFormat))
             self.ui.feedback('Formattage des nombres...')
-            self.cleaner.formatNumbers()
+            self.ui.feedback(self.cleaner.formatNumbers())
             if self.cheminJointure is not None:
                 self.ui.feedback('Jointure des données...')
-                self.cleaner.joint(self.cheminJointure, self.colComp1, self.colComp2, self.colJoints)
+                self.ui.feedback(self.cleaner.joint(self.cheminJointure, self.colComp1, self.colComp2, self.colJoints))
             self.ui.feedback('Formattage des nombres...')
-            self.cleaner.formatNumbers()
+            self.ui.feedback(self.cleaner.formatNumbers())
             if self.colIndexAnonymisation is not None:
                 self.ui.feedback('Anonymisation des données...')
-                self.cleaner.anonymize(self.colIndexAnonymisation)
+                self.ui.feedback(self.cleaner.anonymize(self.colIndexAnonymisation))
             if self.modeCateg is not None:
                 self.ui.feedback('Catégorisation des données...')
-                self.cleaner.categorize(self.modeCateg, self.colIndexC, self.changes)
+                self.ui.feedback(self.cleaner.categorize(self.modeCateg, self.colIndexC, self.changes))
             if self.colIndexApparition is not None:
                 self.ui.feedback('Calcul apparition des valeurs...')
-                self.cleaner.count(self.colIndexApparition)
+                self.ui.feedback(self.cleaner.count(self.colIndexApparition))
             if self.colIndexAdditionIdentification is not None:
                 self.ui.feedback('Addition des valeurs...')
-                self.cleaner.summ(self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
+                self.ui.feedback(self.cleaner.summ(self.colIndexAdditionIdentification, self.colIndexAdditionAssommer))
             if self.colIndexDoublon is not None:
                 self.ui.feedback('Identification des doublons...')
-                self.cleaner.doublons(self.colIndexDoublon)
+                self.ui.feedback(self.cleaner.doublons(self.colIndexDoublon))
             self.ui.feedback('Purification...')
-            self.cleaner.purify()
+            self.ui.feedback(self.cleaner.purify())
             self.callBackUI()
         if self.key == 'save':
             if self.colIndexAnonymisation is None:
                 self.ui.feedback('Sauvegarde en cours...')
-                self.cleaner.saveWB(1, self.newPath)
+                self.ui.feedback(self.cleaner.saveWB(1, self.newPath))
             else:
                 self.ui.feedback('Sauvegarde en cours...')
-                self.cleaner.saveWB(2, self.newPath)
-            self.cleaner.openWB(1, self.newPath)
+                self.ui.feedback(self.cleaner.saveWB(2, self.newPath))
+            self.ui.feedback(self.cleaner.openWB(1, self.newPath))
             self.callBackUI()
 
     def setMod(self, key):
