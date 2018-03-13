@@ -510,25 +510,25 @@ class MyWindow:
                     self.dateFormat='%d%Y%m'
 
             if self.varDoublon.get():
-                entryDoublonString = self.entryDoublon.get().split(",")
+                entryDoublonString = self.entryDoublon.get().split(";")
                 self.colIndexDoublon = [int(s) for s in entryDoublonString]
 
             if self.varAnonymisation.get():
-                entryAnonymisationString= self.entryAnonymisation.get().split(",")
+                entryAnonymisationString= self.entryAnonymisation.get().split(";")
                 self.colIndexAnonymisation= [int(s) for s in entryAnonymisationString]
 
             if self.varApparition.get():
-                entryApparitionString = self.entryApparition.get().split(",")
+                entryApparitionString = self.entryApparition.get().split(";")
                 self.colIndexApparition = [int(s) for s in entryApparitionString]
 
             if self.varAddition.get():
-                entryAdditionIdentificationString = self.entryAdditionIdentification.get().split(",")
+                entryAdditionIdentificationString = self.entryAdditionIdentification.get().split(";")
                 self.colIndexAdditionIdentification = [int(s) for s in entryAdditionIdentificationString]
                 entryAdditionAssommerString = self.entryAdditionAssommer.get()
                 self.colIndexAdditionAssommer = int(entryAdditionAssommerString)
 
             if self.varCell.get():
-                self.banList= self.entryCaracteresIndesirables.get().split(",")
+                self.banList= self.entryCaracteresIndesirables.get().split(";")
 
             if self.varCompilation.get():
                 self.listeCheminCompil = []
@@ -539,13 +539,13 @@ class MyWindow:
                 self.cheminJointure = self.listeJointure.get(0)
                 self.colComp1 = int(self.entryJointureFichier1.get())
                 self.colComp2 = int(self.entryJointureFichier2.get())
-                entryJoinFichier3 = self.entryJointureFichier3.get().split(",")
+                entryJoinFichier3 = self.entryJointureFichier3.get().split(";")
                 self.colJoints = [int(s) for s in entryJoinFichier3]
 
             if self.varCategorisation.get():
                 self.colIndexC = int(self.entryColonneCategorisation.get())
-                entryCategorisationKeyString = self.entryEntreeCategorisation.get().split(",")
-                entryCategorisationValueString = self.entrySortieCategorisation.get().split(",")
+                entryCategorisationKeyString = self.entryEntreeCategorisation.get().split(";")
+                entryCategorisationValueString = self.entrySortieCategorisation.get().split(";")
                 if self.listModeCategorisation.curselection()[0]==0:
                     self.modeCateg='numerical'
                 if self.listModeCategorisation.curselection()[0]==1:
@@ -647,6 +647,10 @@ class MyWindow:
             self.menuhistory.add_command(label=self.filename,command=lambda: self.load(None, 'from_MENU_NOCLEAN', args[0]))
             self.display()
             self.varNomFichier.set(self.filename)
+        if update == 'cancel':
+            self.display()
+            self.varNomFichier.set(args[0])
+            self.filename = args[0]
 
     def enableCheckButtons(self, key):
         if key == 'unlock':
@@ -787,7 +791,8 @@ class MyWindow:
             operator.start()
         except:
             self.resetUI()
-            self.load(None, 'history_CLEAN', self.filename)
+            self.cleaner.timeMachine('pullback@', self.filename)
+            self.load(None, 'cancel', self.filename)
 
     #Effacer l'affichage
     def clear(self):
