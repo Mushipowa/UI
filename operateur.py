@@ -39,38 +39,50 @@ class Operateur(Thread):
             self.ui.feedback('Initialisation des traitements..')
             self.ui.feedback(self.cleaner.openWB(1, self.filename))
             if self.listeCheminCompil is not None:
+                self.ui.clear()
                 self.ui.feedback('Compilation...')
                 self.ui.feedback(self.cleaner.aggreg(self.listeCheminCompil))
             if self.banList is not None:
                 self.ui.feedback(self.cleaner.param(self.banList))
+            self.ui.clear()
             self.ui.feedback('Purification...')
             self.ui.feedback(self.cleaner.purify())
             if self.dateFormat is not None:
+                self.ui.clear()
                 self.ui.feedback('Formattage des dates...')
                 self.ui.feedback(self.cleaner.changeDate(self.dateFormat))
+            self.ui.clear()
             self.ui.feedback('Formattage des nombres...')
             self.ui.feedback(self.cleaner.formatNumbers())
             if self.cheminJointure is not None:
+                self.ui.clear()
                 self.ui.feedback('Jointure des données...')
                 self.ui.feedback(self.cleaner.joint(self.cheminJointure, self.colComp1, self.colComp2, self.colJoints))
+            self.ui.clear()
             self.ui.feedback('Formattage des nombres...')
             self.ui.feedback(self.cleaner.formatNumbers())
             if self.colIndexAnonymisation is not None:
+                self.ui.clear()
                 self.ui.feedback('Anonymisation des données...')
                 self.ui.feedback(self.cleaner.anonymize(self.colIndexAnonymisation))
             if self.modeCateg is not None:
+                self.ui.clear()
                 self.ui.feedback('Catégorisation des données...')
                 self.ui.feedback(self.cleaner.categorize(self.modeCateg, self.colIndexC, self.changes))
             if self.colIndexApparition is not None:
+                self.ui.clear()
                 self.ui.feedback('Calcul apparition des valeurs...')
                 self.ui.feedback(self.cleaner.count(self.colIndexApparition))
             if self.colIndexAdditionIdentification is not None:
+                self.ui.clear()
                 self.ui.feedback('Addition des valeurs...')
                 self.ui.feedback(self.cleaner.summ(self.colIndexAdditionIdentification, self.colIndexAdditionAssommer))
             if self.colIndexDoublon is not None:
+                self.ui.clear()
                 self.ui.feedback('Identification des doublons...')
                 self.ui.feedback(self.cleaner.doublons(self.colIndexDoublon))
             self.ui.feedback(self.cleaner.addIndex())
+            self.ui.clear()
             self.ui.feedback('Purification...')
             self.ui.feedback(self.cleaner.purify())
             if self.banList is not None:
