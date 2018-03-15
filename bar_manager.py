@@ -17,4 +17,4 @@ class BarManager(Thread):
     def run(self):
         while True:
             self.ui.setBarValue(self.cleaner.getProgress())
-            time.sleep(0.1)
+            time.sleep(0.01)

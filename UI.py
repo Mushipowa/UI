@@ -528,7 +528,7 @@ class MyWindow:
                 self.colIndexAdditionAssommer = int(entryAdditionAssommerString)
 
             if self.varCell.get():
-                self.banList= self.entryCaracteresIndesirables.get().split(";")
+                self.banList = self.entryCaracteresIndesirables.get().split(";")
 
             if self.varCompilation.get():
                 self.listeCheminCompil = []
@@ -690,7 +690,7 @@ class MyWindow:
         self.colIndexApparition = None
         self.colIndexAdditionIdentification = None
         self.colIndexAdditionAssommer = None
-        self.banList= None
+        self.banList = None
         self.listeCheminCompil= None
         self.cheminJointure = None
         self.colComp1 = None
@@ -791,7 +791,8 @@ class MyWindow:
             operator.start()
         except:
             self.resetUI()
-            self.cleaner.timeMachine('pullback@', self.filename)
+            self.resetParam()
+            self.cleaner.timeMachine('pullBack@', self.filename)
             self.load(None, 'cancel', self.filename)
 
     #Effacer l'affichage

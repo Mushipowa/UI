@@ -70,8 +70,11 @@ class Operateur(Thread):
             if self.colIndexDoublon is not None:
                 self.ui.feedback('Identification des doublons...')
                 self.ui.feedback(self.cleaner.doublons(self.colIndexDoublon))
+            self.ui.feedback(self.cleaner.addIndex())
             self.ui.feedback('Purification...')
             self.ui.feedback(self.cleaner.purify())
+            if self.banList is not None:
+                self.ui.feedback(self.cleaner.resetBanned())
             self.callBackUI()
         if self.key == 'save':
             if self.colIndexAnonymisation is None:
