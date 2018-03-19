@@ -12,6 +12,7 @@ except ImportError:
     # Python 3
     import tkinter as tk
     from tkinter import ttk
+    from tkinter import messagebox as mess
     from tkinter.filedialog import askopenfilename
 import PIL
 from PIL import ImageTk, Image
@@ -556,10 +557,11 @@ class MyWindow:
                 else:
                     for i in range(len(entryCategorisationValueString)):
                         self.changes.update({tuple(entryCategorisationKeyString[i].split(":")):entryCategorisationValueString[i]})
+            return ''
         except ValueError:
-            self.feedback("Error while processing column indexes, please make sure to provide an integer index.")
+            return ValueError("Error while processing column indexes, please make sure to provide an integer index.")
         except:
-            self.feedback("Unexpected error: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            return Exception("Unexpected error: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     #Nettoyer
     def clean(self):
@@ -569,14 +571,19 @@ class MyWindow:
             barManager.start()
         else:
             pass
-        self.getParam()
-        operator = operateur.Operateur(self, self.cleaner, self.filename, self.banList, self.dateFormat,
-                            self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
-                            self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath, self.colIndexApparition,
-                            self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
-        operator.setMod('clean')
-        operator.start()
-
+        p = self.getParam()
+        if p == '':
+            operator = operateur.Operateur(self, self.cleaner, self.filename, self.banList, self.dateFormat,
+                                self.colIndexDoublon, self.colIndexAnonymisation, self.listeCheminCompil, self.cheminJointure, self.colComp1,
+                                self.colComp2, self.colJoints, self.modeCateg, self.colIndexC, self.changes, self.newPath, self.colIndexApparition,
+                                self.colIndexAdditionIdentification, self.colIndexAdditionAssommer)
+            operator.setMod('clean')
+            operator.start()
+        else:
+            self.pop(str(p))
+            self.resetUI()
+            self.resetParam()
+            self.load(None, 'cancel', self.filename)
 
 
     #Charger un fichier
@@ -808,6 +815,9 @@ class MyWindow:
 
     def resetListCompil(self):
         self.listeCompilation.delete(0, tk.END)
+
+    def pop(self, info):
+        mess.showerror(title='Erreur', message=info)
 
 # --- main ---
 
